@@ -1,4 +1,4 @@
-using Gameplay.Controllers;
+using Gameplay.Core.Controllers;
 using Gameplay.Views;
 using Sirenix.OdinInspector;
 using UnityEngine;

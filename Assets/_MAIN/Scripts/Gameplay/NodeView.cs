@@ -49,5 +49,9 @@ namespace Gameplay.Views
 
             spriteRenderer.color = isPowered ? colorOn : colorOff;
         }
+        public void SetAsDummy()
+        {
+            spriteRenderer.gameObject.SetActive(false);
+        }
     }
 }
