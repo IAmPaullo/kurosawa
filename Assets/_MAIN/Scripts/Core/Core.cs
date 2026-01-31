@@ -19,3 +19,9 @@ namespace Gameplay.Core
         Lamp, //target
     }
 }
+
+
+namespace Gameplay.Core.Events
+{
+    public struct LevelCompletedEvent : IEvent { }
+}
