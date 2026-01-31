@@ -147,7 +147,7 @@ namespace Gameplay.Core.Controllers
             }
             DummyViews.Clear();
 
-            // Recalcula o fluxo apenas agora que o jogo "começou"
+
             RecalculateFlow();
             UpdateAllViews();
         }

@@ -13,7 +13,6 @@ namespace Gameplay.Views
         [SerializeField] private Color colorOff = Color.gray;
         [SerializeField] private Ease rotationEase = Ease.Linear;
 
-        public event Action<int, int> OnNodeClicked;
 
         [ShowInInspector, ReadOnly] public int XPosition { get; private set; }
         [ShowInInspector, ReadOnly] public int YPosition { get; private set; }
