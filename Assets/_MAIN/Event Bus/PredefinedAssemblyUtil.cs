@@ -15,7 +15,8 @@ public static class PredefinedAssemblyUtil
         AssemblyCSharpEditor,
         AssemblyCSharpEditorFirstPass,
         AssemblyCSharpFirstPass,
-        EventBusAssembly
+        EventBusAssembly,
+        Main
     }
 
     /// <summary>
@@ -32,6 +33,7 @@ public static class PredefinedAssemblyUtil
             "Assembly-CSharp-Editor-firstpass" => AssemblyType.AssemblyCSharpEditorFirstPass,
             "Assembly-CSharp-firstpass" => AssemblyType.AssemblyCSharpFirstPass,
             "EventBusAssembly" => AssemblyType.EventBusAssembly,
+            "Main" => AssemblyType.Main,
             _ => null
         };
     }
@@ -58,7 +60,7 @@ public static class PredefinedAssemblyUtil
             }
         }
 
-        AddTypesFromAssembly(assemblyTypes[AssemblyType.AssemblyCSharp], types, interfaceType);
+        //AddTypesFromAssembly(assemblyTypes[AssemblyType.AssemblyCSharp], types, interfaceType);
         //AddTypesFromAssembly(assemblyTypes[AssemblyType.AssemblyCSharpFirstPass], types, interfaceType);
 
         return types;
