@@ -14,9 +14,11 @@ namespace Gameplay.Core.Controllers
 {
     public class LevelController : MonoBehaviour
     {
-        [Title("Data Source")]
         //[ReadOnly,InlineEditor]
-        public LevelDataSO CurrentLevelData;
+        [BoxGroup("References")]
+        [SerializeField] private LevelDataSO CurrentLevelData;
+        [Required, SceneObjectsOnly, BoxGroup("References")]
+        [SerializeField] private CameraController CameraController;
 
 
         [SerializeField, TabGroup("Grid Configuration")]
@@ -33,10 +35,12 @@ namespace Gameplay.Core.Controllers
 
 
         private NodeModel[,] GridModel;
-        private readonly List<NodeView> ActiveViews = new ();
-        private readonly List<GameObject> DummyViews = new ();
+        [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
+        private readonly List<NodeView> ActiveViews = new();
+        [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
+        private readonly List<GameObject> DummyViews = new();
 
-        private CancellationTokenSource _revealCts;
+        private CancellationTokenSource revealCts;
 
 
         private void Start()
@@ -49,8 +53,8 @@ namespace Gameplay.Core.Controllers
 
         private void OnDestroy()
         {
-            _revealCts?.Cancel();
-            _revealCts?.Dispose();
+            revealCts?.Cancel();
+            revealCts?.Dispose();
         }
 
         [Button("Load Current Level")]
@@ -58,15 +62,18 @@ namespace Gameplay.Core.Controllers
         {
             CurrentLevelData = levelData;
 
-            _revealCts?.Cancel();
-            _revealCts?.Dispose();
-            _revealCts = new CancellationTokenSource();
+            revealCts?.Cancel();
+            revealCts?.Dispose();
+            revealCts = new CancellationTokenSource();
 
             ClearCurrentLevel();
 
             GenerateFullGrid();
-
-            RevealLevelRoutine(_revealCts.Token).Forget();
+            if (CameraController != null)
+            {
+                CameraController.Setup(MaxGridSize, CellSize, GridOrigin.position);
+            }
+            RevealLevelRoutine(revealCts.Token).Forget();
         }
 
         private void ClearCurrentLevel()
@@ -91,7 +98,7 @@ namespace Gameplay.Core.Controllers
                     float yPosition = Y * CellSize;
                     Vector3 Position = GridOrigin.position + new Vector3(xPosition, 0, yPosition);
 
-                    
+
                     if (IsInsideLevelBounds(X, Y) && CurrentLevelData.Layout[X, Y] != null)
                     {
                         SpawnRealNode(X, Y, Position);
@@ -136,13 +143,17 @@ namespace Gameplay.Core.Controllers
 
         private async UniTaskVoid RevealLevelRoutine(CancellationToken token)
         {
-            
-            await UniTask.Delay(2000, cancellationToken: token);
 
-            
+            await UniTask.Delay(500, cancellationToken: token);
+
+            if (CameraController != null)
+            {
+                CameraController.FocusOnLevel(CurrentLevelData, CellSize, GridOrigin.position);
+            }
+
             foreach (var Dummy in DummyViews)
             {
-                
+
                 Dummy.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBack).OnComplete(() => Destroy(Dummy));
             }
             DummyViews.Clear();

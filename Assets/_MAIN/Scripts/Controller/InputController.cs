@@ -20,6 +20,7 @@ namespace Gameplay.Core.Controllers
         private InputAction PressAction;
         private InputAction PositionAction;
 
+        Vector3 clickPos;
         private void Awake()
         {
             PressAction = new InputAction(type: InputActionType.Button);
@@ -57,15 +58,23 @@ namespace Gameplay.Core.Controllers
         private void PerformRaycast(Vector2 screenPosition)
         {
             Ray Ray = MainCamera.ScreenPointToRay(screenPosition);
-
+            Debug.DrawRay(Ray.GetPoint(0), Ray.direction);
 
             if (Physics.Raycast(Ray, out RaycastHit Hit, 100f, InteractableLayer))
             {
+                clickPos = MainCamera.ScreenToWorldPoint(screenPosition);
+
                 if (Hit.collider.TryGetComponent(out NodeView Node))
                 {
                     LevelController.OnNodeInteraction(Node.XPosition, Node.YPosition);
                 }
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(clickPos, .25f);
         }
     }
 }

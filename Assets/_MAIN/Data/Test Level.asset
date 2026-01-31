@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b52abe1346b82bb438c2579ee7881dbd, type: 3}
-  m_Name: New Level
+  m_Name: Test Level
   m_EditorClassIdentifier: Main::Gameplay.Core.Data.LevelDataSO
   serializationData:
     SerializedFormat: 2

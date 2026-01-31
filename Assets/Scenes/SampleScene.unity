@@ -573,8 +573,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Main::InfinityGames.LoopEnergy.Controllers.LevelController
   CurrentLevelData: {fileID: 11400000, guid: af86261d052c778498c93852793538dd, type: 2}
+  CameraController: {fileID: 1749126705}
   CellSize: 2.56
   GridOrigin: {fileID: 1448806253}
+  MaxGridSize: 10
   NodePrefab: {fileID: 2915971359565890404, guid: b9d294dc398987444b776c7ebe3ab5cc, type: 3}
   PiecesContainer: {fileID: 1277034920}
 --- !u!4 &1448806253
@@ -626,6 +628,55 @@ Transform:
   - {fileID: 330585546}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1749126703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1749126704}
+  - component: {fileID: 1749126705}
+  m_Layer: 0
+  m_Name: Camera Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1749126704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749126703}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2044820056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1749126705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749126703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 025f67749e655e145846985a7a15c236, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::Gameplay.Core.Controllers.CameraController
+  MainCamera: {fileID: 330585545}
+  Padding: 2
+  AnimationDuration: 1.5
+  AnimationEase: 10
+  Offset: {x: -20, y: 20, z: -20}
 --- !u!1 &1803751821
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +739,7 @@ Transform:
   m_Children:
   - {fileID: 1448806253}
   - {fileID: 944919476}
+  - {fileID: 1749126704}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
