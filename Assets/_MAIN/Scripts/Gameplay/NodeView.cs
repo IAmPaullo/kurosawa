@@ -15,33 +15,39 @@ namespace Gameplay.Views
 
         public event Action<int, int> OnNodeClicked;
 
-        [ShowInInspector, ReadOnly] private int xPosition;
-        [ShowInInspector, ReadOnly] private int yPosition;
+        [ShowInInspector, ReadOnly] public int XPosition { get; private set; }
+        [ShowInInspector, ReadOnly] public int YPosition { get; private set; }
 
         public void Setup(int x, int y, Sprite icon)
         {
-            xPosition = x;
-            yPosition = y;
+            XPosition = x;
+            YPosition = y;
 
             if (spriteRenderer != null)
+            {
                 spriteRenderer.sprite = icon;
+                spriteRenderer.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            }
 
-            UpdateVisuals(0, false);
-
+            UpdateVisuals(0, false, true);
         }
 
-        public void UpdateVisuals(int rotationIndex = 0, bool isPowered = false)
+        public void UpdateVisuals(int rotationIndex, bool isPowered, bool instant = false)
         {
 
-            transform.DORotate(new Vector3(0, 0, -90 * rotationIndex), 0.2f)
+            Vector3 TargetRotation = new Vector3(0, rotationIndex * 90, 0);
+
+            if (instant)
+            {
+                transform.localRotation = Quaternion.Euler(TargetRotation);
+            }
+            else
+            {
+                transform.DOLocalRotate(TargetRotation, 0.2f)
                 .SetEase(rotationEase);
+            }
 
             spriteRenderer.color = isPowered ? colorOn : colorOff;
-        }
-
-        private void OnMouseDown()
-        {
-            OnNodeClicked?.Invoke(xPosition, yPosition);
         }
     }
 }

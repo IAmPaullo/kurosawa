@@ -25,7 +25,7 @@ namespace Gameplay.Controllers
         public Transform PiecesContainer;
 
 
-
+        [ShowInInspector, ReadOnly]
         private NodeModel[,] GridModel;
         private NodeView[,] GridView;
 
@@ -57,8 +57,11 @@ namespace Gameplay.Controllers
             foreach (Transform Child in PiecesContainer) Destroy(Child.gameObject);
         }
 
+        [Button("Re-Generate Grid")]
         private void GenerateGrid()
         {
+            foreach (Transform Child in PiecesContainer) Destroy(Child.gameObject);
+
             int Width = CurrentLevelData.Width;
             int Height = CurrentLevelData.Height;
 
@@ -69,28 +72,26 @@ namespace Gameplay.Controllers
             {
                 for (int Y = 0; Y < Height; Y++)
                 {
-
                     PieceSO Definition = CurrentLevelData.Layout[X, Y];
-
                     if (Definition == null) continue;
-
 
                     GridModel[X, Y] = new NodeModel(X, Y, Definition, 0);
 
-                    //view create
-                    Vector3 Position = GridOrigin.position + new Vector3(X * CellSize, Y * CellSize, 0);
-                    NodeView ViewInstance = Instantiate(NodePrefab, Position, Quaternion.identity, PiecesContainer);
+                    // instaciacao no xz (Chão) pra 2.5d
+                    Vector3 Position = GridOrigin.position + new Vector3(X * CellSize, 0, Y * CellSize);
 
-                    ViewInstance.Setup(X, Y, Definition.Icon);
-                    ViewInstance.OnNodeClicked += HandleNodeInput;
+                    NodeView NodeViewInstance = Instantiate(NodePrefab, Position, Quaternion.identity, PiecesContainer);
+                    NodeViewInstance.Setup(X, Y, Definition.Icon);
 
-                    GridView[X, Y] = ViewInstance;
+                    GridView[X, Y] = NodeViewInstance;
                 }
             }
         }
 
-        private void HandleNodeInput(int x, int y)
+        public void OnNodeInteraction(int x, int y)
         {
+            if (GridModel[x, y] == null) return;
+
             GridModel[x, y].Rotate();
             RecalculateFlow();
             UpdateAllViews();
@@ -105,7 +106,7 @@ namespace Gameplay.Controllers
 
             Queue<NodeModel> Queue = new();
 
-           
+
             for (int X = 0; X < CurrentLevelData.Width; X++)
             {
                 for (int Y = 0; Y < CurrentLevelData.Height; Y++)
@@ -179,6 +180,8 @@ namespace Gameplay.Controllers
                     Win = false;
                     break;
                 }
+                if (Node != null)
+                    Debug.Log($"{Node} is Powered? {Node.IsPowered}! {Node.GetCurrentConnections()}");
             }
 
             if (Win)

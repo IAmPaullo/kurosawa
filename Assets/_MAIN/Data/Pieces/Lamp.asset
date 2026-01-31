@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c1fbdea7c5326458bcc8129a354506, type: 3}
   m_Name: Lamp
   m_EditorClassIdentifier: Main::PieceSO
-  ID: LineStraight_00
+  ID: Lamp_4
   Icon: {fileID: 21300000, guid: 8944ace5371c06244bb2629043292a09, type: 3}
