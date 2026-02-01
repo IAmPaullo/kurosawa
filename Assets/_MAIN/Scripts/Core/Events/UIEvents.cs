@@ -1,6 +1,7 @@
 namespace Gameplay.Core.Events
 {
     public struct RequestPauseEvent : IEvent { }
+    public struct RequestResumeEvent : IEvent { }
     public struct RequestNextLevelEvent : IEvent { }
 
     public struct RequestRestartEvent : IEvent { }

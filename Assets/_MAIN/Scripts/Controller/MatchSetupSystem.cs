@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Gameplay.Core.Controllers;
 using Gameplay.Core.Data;
 using Gameplay.Core.Events;
 using Sirenix.OdinInspector;
@@ -12,24 +13,33 @@ namespace Gameplay.Managers
 
         [BoxGroup("Dependencies")]
         [SerializeField] private SaveManager SaveManager;
+        [SerializeField] private CameraController CameraController;
 
         [BoxGroup("Debug Config")]
         [SerializeField] private LevelDataSO DebugLevel;
         [SerializeField] private bool AutoStart = true;
 
+        [Title("Settings")]
+        [Range(0f, .99f), SerializeField]
+        private float pauseTimeScale = .75f;
+
+
+        [ShowInInspector, ReadOnly] public bool IsPaused { get; private set; }
         [ShowInInspector, ReadOnly] private int currentSessionLevelIndex;
 
+        private EventBinding<RequestPauseEvent> pauseRequestBind;
+        private EventBinding<RequestResumeEvent> resumeRequestBind;
         private EventBinding<LevelCompletedEvent> levelCompletedBind;
         private EventBinding<RequestNextLevelEvent> nextLevelBind;
         private EventBinding<RequestRestartEvent> restartBind;
+
         private void Start()
         {
             if (SaveManager == null)
             {
-                Debug.LogError("SaveManager  missing");
+                Debug.LogError("SaveManager is null");
                 return;
             }
-
             if (AutoStart)
             {
                 int savedIndex = SaveManager.GetNextLevelIndex();
@@ -39,17 +49,23 @@ namespace Gameplay.Managers
 
         private void OnEnable()
         {
+            pauseRequestBind = new(OnPauseRequest);
+            resumeRequestBind = new(OnResumeRequest);
             levelCompletedBind = new(OnLevelCompleted);
             nextLevelBind = new(OnRequestNextLevel);
             restartBind = new(OnRequestRestart);
 
+            EventBus<RequestPauseEvent>.Register(pauseRequestBind);
             EventBus<LevelCompletedEvent>.Register(levelCompletedBind);
             EventBus<RequestNextLevelEvent>.Register(nextLevelBind);
             EventBus<RequestRestartEvent>.Register(restartBind);
+            EventBus<RequestResumeEvent>.Register(resumeRequestBind);
         }
 
         private void OnDisable()
         {
+            EventBus<RequestPauseEvent>.Deregister(pauseRequestBind);
+            EventBus<RequestResumeEvent>.Deregister(resumeRequestBind);
             EventBus<LevelCompletedEvent>.Deregister(levelCompletedBind);
             EventBus<RequestNextLevelEvent>.Deregister(nextLevelBind);
             EventBus<RequestRestartEvent>.Deregister(restartBind);
@@ -94,11 +110,35 @@ namespace Gameplay.Managers
             EventBus<MatchStartEvent>.Raise(new MatchStartEvent());
         }
 
+        private void OnPauseRequest(RequestPauseEvent evt)
+        {
+            if (IsPaused) return;
+            IsPaused = true;
+
+
+            if (CameraController != null)
+                CameraController.SetPaused(true);
+
+            Time.timeScale = pauseTimeScale;
+
+            Debug.Log("Game Paused");
+        }
+        private void OnResumeRequest(RequestResumeEvent evt)
+        {
+            if (!IsPaused) return;
+            IsPaused = false;
+
+
+            if (CameraController != null)
+                CameraController.SetPaused(false);
+
+            Time.timeScale = 1;
+
+            Debug.Log("Game Resumed");
+        }
         private void OnLevelCompleted(LevelCompletedEvent evt)
         {
-
             Debug.Log($" Level {currentSessionLevelIndex} Complete. Saving progress");
-
             SaveManager.RegisterLevelCompletion(currentSessionLevelIndex);
             EventBus<MatchEndEvent>.Raise(new MatchEndEvent());
         }

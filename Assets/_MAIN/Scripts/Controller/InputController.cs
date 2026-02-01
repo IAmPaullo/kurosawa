@@ -16,6 +16,11 @@ namespace Gameplay.Core.Controllers
 
         [SerializeField] private LayerMask InteractableLayer;
 
+        [SerializeField, BoxGroup("Settings")]
+        private float interactionCooldown = 0.15f; 
+
+        private float lastInteractionTime;
+
         private InputAction PressAction;
         private InputAction PositionAction;
 
@@ -49,6 +54,7 @@ namespace Gameplay.Core.Controllers
 
         private void OnInputPerformed(InputAction.CallbackContext _)
         {
+            if (Time.time < lastInteractionTime + interactionCooldown) return;
             Vector2 ScreenPosition = MouseUtil.GetMousePosition();
             PerformRaycast(ScreenPosition);
         }
@@ -62,6 +68,7 @@ namespace Gameplay.Core.Controllers
             {
                 if (Hit.collider.TryGetComponent(out NodeView Node))
                 {
+                    lastInteractionTime = Time.time;
                     LevelController.OnNodeInteraction(Node.XPosition, Node.YPosition);
                 }
             }

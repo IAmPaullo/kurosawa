@@ -54,6 +54,12 @@ public class GameUIController : MonoBehaviour
     private Ease moveInEase = Ease.Linear;
     [SerializeField, BoxGroup("Animation")]
     private Ease moveOutEase = Ease.Linear;
+    [SerializeField, BoxGroup("Animation")]
+    private float windowFadeDuration = 0.2f;
+    [SerializeField, BoxGroup("Animation")]
+    private Ease windowFadeInEase = Ease.OutBack;
+    [SerializeField, BoxGroup("Animation")]
+    private Ease windowFadeOutEase = Ease.InBack;
 
     private EventBinding<RequestPauseEvent> pauseRequestBind;
     private EventBinding<MatchEndEvent> matchEndBind;
@@ -96,7 +102,12 @@ public class GameUIController : MonoBehaviour
 
     public void SetupButtons()
     {
-        returnToGameButton.onClick.AddListener(() => AnimateOut());
+        returnToGameButton.onClick.AddListener(() =>
+        {
+            EventBus<RequestResumeEvent>.Raise(new());
+            AnimateOut();
+
+        });
         pauseButton.onClick.AddListener(() => EventBus<RequestPauseEvent>.Raise(new()));
 
     }
@@ -155,14 +166,28 @@ public class GameUIController : MonoBehaviour
         canvasGroup.interactable = false;
 
         uiSequence.Join(background.DOFade(0, .25f));
-        uiSequence.Join(topSideGroup.GetComponent<RectTransform>().DOAnchorPos(topTargetPos + (Vector2.up * moveOffset), animDuration)
-            .SetEase(moveOutEase));
-        uiSequence.Join(rightSideGroup.GetComponent<RectTransform>().DOAnchorPos(rightTargetPos + (Vector2.right * moveOffset), animDuration)
-            .SetEase(moveOutEase));
-        uiSequence.Join(bottomSideGroup.GetComponent<RectTransform>().DOAnchorPos(bottomTargetPos + (Vector2.down * moveOffset), animDuration)
-            .SetEase(moveOutEase));
+        uiSequence.Join(MoveContainer(topSideGroup, topTargetPos + (Vector2.up * moveOffset), animDuration, moveOutEase));
+        uiSequence.Join(MoveContainer(rightSideGroup, rightTargetPos + (Vector2.right * moveOffset), animDuration, moveOutEase));
+        uiSequence.Join(MoveContainer(bottomSideGroup, bottomTargetPos + (Vector2.down * moveOffset), animDuration, moveOutEase));
 
         uiSequence.SetUpdate(true);
+    }
+    public void OpenWindow(RectTransform window)
+    {
+        if (window == null) return;
+
+        window.gameObject.SetActive(true);
+        window.localScale = Vector3.zero; // Reseta para animar
+        window.DOScale(1f, windowFadeDuration).SetEase(windowFadeInEase).SetUpdate(true);
+    }
+    public void CloseWindow(RectTransform window)
+    {
+        if (window == null) return;
+
+        window.DOScale(0f, windowFadeDuration)
+            .SetEase(windowFadeOutEase)
+            .SetUpdate(true)
+            .OnComplete(() => window.gameObject.SetActive(false));
     }
 
 

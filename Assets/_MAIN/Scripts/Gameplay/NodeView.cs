@@ -46,6 +46,8 @@ namespace Gameplay.Views
 
             Vector3 TargetRotation = new(0, rotationIndex * 90, 0);
 
+            transform.DOKill();
+
             if (instant)
             {
                 transform.localRotation = Quaternion.Euler(TargetRotation);
@@ -53,7 +55,8 @@ namespace Gameplay.Views
             else
             {
                 transform.DOLocalRotate(TargetRotation, 0.2f)
-                .SetEase(rotationEase);
+                    .SetEase(rotationEase)
+                    .SetLink(gameObject);
             }
             IsPowered = isPowered;
             spriteRenderer.color = IsPowered ? colorOn : colorOff;

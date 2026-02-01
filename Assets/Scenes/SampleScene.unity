@@ -839,6 +839,9 @@ MonoBehaviour:
   animDuration: 0.5
   moveInEase: 1
   moveOutEase: 1
+  windowFadeDuration: 0.2
+  windowFadeInEase: 1
+  windowFadeOutEase: 1
 --- !u!1001 &276917008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2762,6 +2765,7 @@ MonoBehaviour:
   InteractableLayer:
     serializedVersion: 2
     m_Bits: 64
+  interactionCooldown: 0.25
 --- !u!1001 &984797352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3083,6 +3087,7 @@ GameObject:
   - component: {fileID: 1067996442}
   - component: {fileID: 1067996441}
   - component: {fileID: 1067996440}
+  - component: {fileID: 1067996443}
   m_Layer: 0
   m_Name: Return To Game Button
   m_TagString: Untagged
@@ -3192,6 +3197,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1067996438}
   m_CullTransparentMesh: 1
+--- !u!114 &1067996443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067996438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d0d754a25464e41893c1d8d8e75cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::ThemeColorApplier
+  image: {fileID: 1067996441}
+  spriteRenderer: {fileID: 0}
+  textMeshProUGUI: {fileID: 0}
+  colorSource: 1
+  gradientTime: 0.5
+  preserveCurrentAlpha: 1
+  forcedAlpha: 1
 --- !u!1 &1086479428
 GameObject:
   m_ObjectHideFlags: 0
@@ -5367,8 +5391,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Main::Gameplay.Managers.MatchSetupSystem
   Campaign: {fileID: 11400000, guid: 422ce17ca8caa24458ee312c9f43dcb8, type: 2}
   SaveManager: {fileID: 2000647544}
+  CameraController: {fileID: 1749126705}
   DebugLevel: {fileID: 11400000, guid: af86261d052c778498c93852793538dd, type: 2}
   AutoStart: 1
+  pauseTimeScale: 0.75
 --- !u!1001 &2027913888
 PrefabInstance:
   m_ObjectHideFlags: 0
