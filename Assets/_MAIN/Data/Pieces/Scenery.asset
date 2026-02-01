@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c1fbdea7c5326458bcc8129a354506, type: 3}
   m_Name: Scenery
   m_EditorClassIdentifier: Main::Gameplay.Core.Data.PieceSO
-  ID: LineStraight_00
-  pieceType: 0
-  Icon: {fileID: 0}
+  ID: Misc
+  pieceType: 3
+  Icon: {fileID: 21300000, guid: 44a054df1702e39458b7072b08d0f212, type: 3}

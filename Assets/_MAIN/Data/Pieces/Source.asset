@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Source
   m_EditorClassIdentifier: Main::PieceSO
   ID: Source
+  pieceType: 1
   Icon: {fileID: 21300000, guid: 032e573374c7fb842be92eb91a88c06d, type: 3}

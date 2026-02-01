@@ -7,7 +7,6 @@ namespace Gameplay.Core
     [Serializable]
     public class NodeModel
     {
-
         [ShowInInspector, ReadOnly] public int X { get; private set; }
         [ShowInInspector, ReadOnly] public int Y { get; private set; }
         [ShowInInspector, ReadOnly, InfoBox("0=0° 1=90° 2=180° 3=270°")]

@@ -54,7 +54,7 @@ namespace Gameplay.Core.Controllers
         private List<NodeView> NodePool = new();
 
         private CancellationTokenSource revealCts;
-        private System.Diagnostics.Stopwatch stopwatch = new();
+
 
         private void Awake()
         {
@@ -78,7 +78,7 @@ namespace Gameplay.Core.Controllers
 
         private void InitializePool()
         {
-            stopwatch.Start();
+
 
             foreach (Transform child in PiecesContainer)
             {
@@ -92,19 +92,16 @@ namespace Gameplay.Core.Controllers
             {
                 ExpandPool(InitialPoolSize - NodePool.Count);
             }
-            stopwatch.Stop();
-            Debug.Log($"Pool init duration: {stopwatch.Elapsed.TotalSeconds}");
+
 
         }
 
         [Button("Load Current Level")]
         public void LoadLevel(LevelDataSO levelData)
         {
-            stopwatch.Restart();
-            stopwatch.Start();
+
             CurrentLevelData = levelData;
 
-            // Define o tamanho máximo baseado no VisualGridSize (para incluir o cenário de fundo)
             int MaxGridSize = levelData.VisualGridSize;
 
             revealCts?.Cancel();
@@ -120,9 +117,6 @@ namespace Gameplay.Core.Controllers
             }
 
             RevealLevelRoutine(revealCts.Token).Forget();
-            stopwatch.Stop();
-            Debug.Log($"Load Level duration: {stopwatch.Elapsed.TotalSeconds}");
-
         }
 
         private void ResetLevelState()
