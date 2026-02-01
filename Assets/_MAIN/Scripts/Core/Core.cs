@@ -17,6 +17,7 @@ namespace Gameplay.Core
         Wire, //connection
         Source, // energy
         Lamp, //target
+        Misc
     }
 }
 

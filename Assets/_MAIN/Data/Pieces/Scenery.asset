@@ -10,7 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22c1fbdea7c5326458bcc8129a354506, type: 3}
-  m_Name: 4 Connections
-  m_EditorClassIdentifier: Main::PieceSO
-  ID: 4 Way
-  Icon: {fileID: 822952047, guid: 60ef19dffd917c342b866e18c64a437c, type: 3}
+  m_Name: Scenery
+  m_EditorClassIdentifier: Main::Gameplay.Core.Data.PieceSO
+  ID: LineStraight_00
+  pieceType: 0
+  Icon: {fileID: 0}
