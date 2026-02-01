@@ -5,9 +5,7 @@ using Gameplay.Core.Data;
 using Gameplay.Core.Events;
 using Gameplay.Views;
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
-
 using System.Threading;
 using UnityEngine;
 
@@ -15,19 +13,15 @@ namespace Gameplay.Core.Controllers
 {
     public class LevelController : MonoBehaviour
     {
-        //[ReadOnly,InlineEditor]
         [BoxGroup("References")]
         [SerializeField] private LevelDataSO CurrentLevelData;
         [Required, SceneObjectsOnly, BoxGroup("References")]
         [SerializeField] private CameraController CameraController;
 
-
         [SerializeField, TabGroup("Grid Configuration")]
         private float CellSize = 1.5f;
         [SerializeField, TabGroup("Grid Configuration")]
         private Transform GridOrigin;
-        //[SerializeField, TabGroup("Grid Configuration")]
-        //private int MaxGridSize = 10;
 
         [SerializeField, TabGroup("Pool")]
         private int InitialPoolSize = 50;
@@ -38,6 +32,7 @@ namespace Gameplay.Core.Controllers
         [SerializeField] private Transform PiecesContainer;
 
         private NodeModel[,] GridModel;
+        private bool IsInputActive = false;
 
         [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
         private readonly List<NodeView> ActiveViews = new();
@@ -54,31 +49,38 @@ namespace Gameplay.Core.Controllers
         private CancellationTokenSource revealCts;
         private Queue<NodeModel> flowQueue;
 
+        private EventBinding<MatchPrepareEvent> matchPrepareBind;
+        private EventBinding<MatchStartEvent> matchStartBind;
+        private EventBinding<MatchEndEvent> matchEndBind;
 
         private void Awake()
         {
             InitializePool();
         }
-        [Button]
-        private void StartLevel()
+
+        private void OnEnable()
         {
-            if (CurrentLevelData != null)
-            {
-                LoadLevel(CurrentLevelData);
-            }
+            matchPrepareBind = new(OnMatchPrepare);
+            matchStartBind = new(OnMatchStart);
+            matchEndBind = new(OnMatchEnd);
+
+            EventBus<MatchPrepareEvent>.Register(matchPrepareBind);
+            EventBus<MatchStartEvent>.Register(matchStartBind);
+            EventBus<MatchEndEvent>.Register(matchEndBind);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
+            EventBus<MatchPrepareEvent>.Deregister(matchPrepareBind);
+            EventBus<MatchStartEvent>.Deregister(matchStartBind);
+            EventBus<MatchEndEvent>.Deregister(matchEndBind);
+
             revealCts?.Cancel();
             revealCts?.Dispose();
         }
 
-
         private void InitializePool()
         {
-
-
             foreach (Transform child in PiecesContainer)
             {
                 if (child.TryGetComponent(out NodeView node))
@@ -91,17 +93,14 @@ namespace Gameplay.Core.Controllers
             {
                 ExpandPool(InitialPoolSize - NodePool.Count);
             }
-
-
         }
 
-        [Button("Load Current Level")]
-        public void LoadLevel(LevelDataSO levelData)
+        private void OnMatchPrepare(MatchPrepareEvent evt)
         {
-
-            CurrentLevelData = levelData;
+            IsInputActive = false;
+            CurrentLevelData = evt.LevelData;
             flowQueue = new Queue<NodeModel>(CurrentLevelData.Width * CurrentLevelData.Height);
-            int MaxGridSize = levelData.VisualGridSize;
+            int MaxGridSize = CurrentLevelData.VisualGridSize;
 
             revealCts?.Cancel();
             revealCts?.Dispose();
@@ -114,16 +113,33 @@ namespace Gameplay.Core.Controllers
             {
                 CameraController.Setup(MaxGridSize, CellSize, GridOrigin.position);
             }
+        }
 
+        private void OnMatchStart(MatchStartEvent evt)
+        {
             RevealLevelRoutine(revealCts.Token).Forget();
         }
 
+        private void OnMatchEnd(MatchEndEvent evt)
+        {
+            IsInputActive = false;
+        }
+
+#if UNITY_EDITOR
+        [Button("Debug Manual Load")]
+        public void LoadLevel(LevelDataSO levelData)
+        {
+            OnMatchPrepare(new MatchPrepareEvent { LevelData = levelData });
+            OnMatchStart(new MatchStartEvent());
+        }
+#endif
         private void ResetLevelState()
         {
             foreach (var Node in NodePool)
             {
                 Node.gameObject.SetActive(false);
                 Node.transform.DOKill();
+                Node.transform.localScale = Vector3.one;
             }
             ActiveViews.Clear();
             DummyViews.Clear();
@@ -161,7 +177,6 @@ namespace Gameplay.Core.Controllers
 
                     if (isInside && CurrentLevelData.Layout[X, Y] != null)
                     {
-
                         PieceSO pieceData = CurrentLevelData.Layout[X, Y];
 
                         if (pieceData.PieceType == PieceType.Misc)
@@ -197,12 +212,14 @@ namespace Gameplay.Core.Controllers
             view.Setup(x, y, data.Icon);
             ActiveViews.Add(view);
         }
+
         private void SetupMiscNode(NodeView view)
         {
             view.Setup(-1, -1, null);
             view.SetAsMisc();
             MiscViews.Add(view);
         }
+
         private void SetupDummyNode(NodeView view)
         {
             view.Setup(-1, -1, null);
@@ -233,10 +250,13 @@ namespace Gameplay.Core.Controllers
 
             RecalculateFlow();
             UpdateAllViews();
+
+            IsInputActive = true;
         }
 
         public void OnNodeInteraction(int x, int y)
         {
+            if (!IsInputActive) return;
             if (GridModel == null || !IsInsideLevelBounds(x, y) || GridModel[x, y] == null) return;
 
             GridModel[x, y].Rotate();
@@ -250,7 +270,6 @@ namespace Gameplay.Core.Controllers
             int width = CurrentLevelData.Width;
             int height = CurrentLevelData.Height;
 
-            
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
@@ -329,10 +348,8 @@ namespace Gameplay.Core.Controllers
                 }
             }
 
-            Debug.LogWarning("yipieee");
+            Debug.Log("LevelCompletedEvent Raised. Finishing match...");
             EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent());
         }
-
-        
     }
 }
