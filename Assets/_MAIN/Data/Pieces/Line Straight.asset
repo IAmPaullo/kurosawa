@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: Line Straight
   m_EditorClassIdentifier: Main::PieceSO
   ID: LineStraight_00
+  pieceType: 0
+  baseConnections: 10
   Icon: {fileID: 438898475, guid: 60ef19dffd917c342b866e18c64a437c, type: 3}

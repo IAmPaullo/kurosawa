@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Main::Gameplay.Core.Data.PieceSO
   ID: Misc
   pieceType: 3
+  baseConnections: 0
   Icon: {fileID: 21300000, guid: 44a054df1702e39458b7072b08d0f212, type: 3}

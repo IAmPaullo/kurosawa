@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Main::PieceSO
   ID: Lamp_4
   pieceType: 2
+  baseConnections: 15
   Icon: {fileID: 21300000, guid: 8944ace5371c06244bb2629043292a09, type: 3}

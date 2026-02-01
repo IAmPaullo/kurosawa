@@ -12,8 +12,10 @@ namespace Gameplay.Core.Data
         [SerializeField] private PieceType pieceType = PieceType.Wire;
         public PieceType PieceType => pieceType;
 
-        [ShowInInspector, EnumToggleButtons]
-        public Direction BaseConnections { get; private set; } = Direction.Up | Direction.Down;
+        [SerializeField, EnumToggleButtons]
+        private Direction baseConnections = Direction.Up | Direction.Down;
+
+        public Direction BaseConnections => baseConnections;
 
         [Title("Visuals")]
         [PreviewField] public Sprite Icon;

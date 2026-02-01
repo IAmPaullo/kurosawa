@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Main::PieceSO
   ID: BaixoDireita
   pieceType: 0
+  baseConnections: 6
   Icon: {fileID: 2130524455, guid: 60ef19dffd917c342b866e18c64a437c, type: 3}

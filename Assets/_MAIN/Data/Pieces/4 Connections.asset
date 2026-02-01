@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Main::PieceSO
   ID: 4 Way
   pieceType: 0
+  baseConnections: 15
   Icon: {fileID: 822952047, guid: 60ef19dffd917c342b866e18c64a437c, type: 3}
