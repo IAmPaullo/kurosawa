@@ -827,7 +827,7 @@ MonoBehaviour:
   rightSideGroup: {fileID: 1190738921}
   bottomSideGroup: {fileID: 383182776}
   settingsButton: {fileID: 2046358729}
-  returnToGameButton: {fileID: 0}
+  returnToGameButton: {fileID: 1067996440}
   pauseButton: {fileID: 1086479430}
   rewardsButtons: {fileID: 0}
   currentLevelText: {fileID: 0}
@@ -1163,6 +1163,7 @@ GameObject:
   - component: {fileID: 383182779}
   - component: {fileID: 383182778}
   - component: {fileID: 383182777}
+  - component: {fileID: 383182780}
   m_Layer: 0
   m_Name: Bottom Container
   m_TagString: Untagged
@@ -1249,6 +1250,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 383182775}
   m_CullTransparentMesh: 1
+--- !u!114 &383182780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383182775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d0d754a25464e41893c1d8d8e75cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::ThemeColorApplier
+  image: {fileID: 383182778}
+  spriteRenderer: {fileID: 0}
+  textMeshProUGUI: {fileID: 0}
+  colorSource: 2
+  gradientTime: 0.5
+  preserveCurrentAlpha: 1
+  forcedAlpha: 1
 --- !u!1001 &403145244
 PrefabInstance:
   m_ObjectHideFlags: 0
