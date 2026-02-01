@@ -37,8 +37,6 @@ namespace Gameplay.Core.Controllers
         [Required, SceneObjectsOnly, BoxGroup("References")]
         [SerializeField] private Transform PiecesContainer;
 
-        // O GridModel só conterá peças lógicas (Wire, Source, Lamp). 
-        // Misc e Vazios serão nulos aqui.
         private NodeModel[,] GridModel;
 
         [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
@@ -54,6 +52,7 @@ namespace Gameplay.Core.Controllers
         private List<NodeView> NodePool = new();
 
         private CancellationTokenSource revealCts;
+        private Queue<NodeModel> flowQueue;
 
 
         private void Awake()
@@ -101,7 +100,7 @@ namespace Gameplay.Core.Controllers
         {
 
             CurrentLevelData = levelData;
-
+            flowQueue = new Queue<NodeModel>(CurrentLevelData.Width * CurrentLevelData.Height);
             int MaxGridSize = levelData.VisualGridSize;
 
             revealCts?.Cancel();
@@ -248,30 +247,41 @@ namespace Gameplay.Core.Controllers
 
         private void RecalculateFlow()
         {
-            foreach (var Node in GridModel) if (Node != null) Node.IsPowered = false;
+            int width = CurrentLevelData.Width;
+            int height = CurrentLevelData.Height;
 
-            Queue<NodeModel> Queue = new();
-
-            for (int X = 0; X < CurrentLevelData.Width; X++)
+            
+            for (int x = 0; x < width; x++)
             {
-                for (int Y = 0; Y < CurrentLevelData.Height; Y++)
+                for (int y = 0; y < height; y++)
                 {
-                    var Node = GridModel[X, Y];
-                    if (Node != null && Node.PieceType == PieceType.Source)
+                    var node = GridModel[x, y];
+                    if (node != null) node.IsPowered = false;
+                }
+            }
+
+            flowQueue.Clear();
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var node = GridModel[x, y];
+                    if (node != null && node.PieceType == PieceType.Source)
                     {
-                        Node.IsPowered = true;
-                        Queue.Enqueue(Node);
+                        node.IsPowered = true;
+                        flowQueue.Enqueue(node);
                     }
                 }
             }
 
-            while (Queue.Count > 0)
+            while (flowQueue.Count > 0)
             {
-                NodeModel Current = Queue.Dequeue();
-                CheckNeighbor(Current, 0, 1, Direction.Up, Direction.Down, Queue);
-                CheckNeighbor(Current, 1, 0, Direction.Right, Direction.Left, Queue);
-                CheckNeighbor(Current, 0, -1, Direction.Down, Direction.Up, Queue);
-                CheckNeighbor(Current, -1, 0, Direction.Left, Direction.Right, Queue);
+                var current = flowQueue.Dequeue();
+                CheckNeighbor(current, 0, 1, Direction.Up, Direction.Down, flowQueue);
+                CheckNeighbor(current, 1, 0, Direction.Right, Direction.Left, flowQueue);
+                CheckNeighbor(current, 0, -1, Direction.Down, Direction.Up, flowQueue);
+                CheckNeighbor(current, -1, 0, Direction.Left, Direction.Right, flowQueue);
             }
         }
 
@@ -306,21 +316,23 @@ namespace Gameplay.Core.Controllers
 
         private void CheckWinCondition()
         {
-            bool Win = true;
-            foreach (NodeModel Node in GridModel)
+            int width = CurrentLevelData.Width;
+            int height = CurrentLevelData.Height;
+
+            for (int x = 0; x < width; x++)
             {
-                if (Node != null && Node.PieceType == PieceType.Lamp && !Node.IsPowered)
+                for (int y = 0; y < height; y++)
                 {
-                    Win = false;
-                    break;
+                    var node = GridModel[x, y];
+                    if (node != null && node.PieceType == PieceType.Lamp && !node.IsPowered)
+                        return;
                 }
             }
 
-            if (Win)
-            {
-                Debug.LogWarning("yipieee");
-                EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent());
-            }
+            Debug.LogWarning("yipieee");
+            EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent());
         }
+
+        
     }
 }
