@@ -22,6 +22,10 @@ namespace Gameplay.Core.Data
         [Min(1)]
         public int Height = 4;
 
+        [Min(2)]
+        public int VisualGridSize = 10;
+
+
         [Title("Layout")]
         [TableMatrix(SquareCells = true, HorizontalTitle = "Grid Layout", DrawElementMethod = "DrawPieceElement")]
         public PieceSO[,] Layout = new PieceSO[4, 4];
@@ -47,7 +51,6 @@ namespace Gameplay.Core.Data
 
             return Result;
         }
-#endif
 
         [Button]
         private void ResizeMatrix()
@@ -75,4 +78,5 @@ namespace Gameplay.Core.Data
             Layout = NewMatrix;
         }
     }
+#endif
 }

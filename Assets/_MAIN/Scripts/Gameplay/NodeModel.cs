@@ -13,9 +13,9 @@ namespace Gameplay.Core
         [ShowInInspector, ReadOnly, InfoBox("0=0° 1=90° 2=180° 3=270°")]
         public int RotationIndex { get; private set; }
         [ShowInInspector, ReadOnly] public bool IsPowered { get; set; }
-        [ShowInInspector, ReadOnly] public PieceType Type => pieceDefinition.Type;
+        [ShowInInspector, ReadOnly] public PieceType PieceType => pieceDefinition.PieceType;
 
-        private PieceSO pieceDefinition;
+        private readonly PieceSO pieceDefinition;
 
         public NodeModel(int x, int y, PieceSO pieceDefinition, int initialRotation = 0)
         {

@@ -16,14 +16,24 @@ namespace Gameplay.Views
 
         [ShowInInspector, ReadOnly] public int XPosition { get; private set; }
         [ShowInInspector, ReadOnly] public int YPosition { get; private set; }
+        [ShowInInspector, ReadOnly] public bool IsDummy { get; private set; }
+        [ShowInInspector, ReadOnly] public bool IsPowered { get; private set; }
+
 
         public void Setup(int x, int y, Sprite icon)
         {
             XPosition = x;
             YPosition = y;
+            IsDummy = false;
+
+            transform.localScale = Vector3.one;
+            transform.localRotation = Quaternion.identity;
 
             if (spriteRenderer != null)
             {
+
+                spriteRenderer.gameObject.SetActive(true);
+
                 spriteRenderer.sprite = icon;
                 spriteRenderer.transform.localRotation = Quaternion.Euler(90, 0, 0);
             }
@@ -34,7 +44,7 @@ namespace Gameplay.Views
         public void UpdateVisuals(int rotationIndex, bool isPowered, bool instant = false)
         {
 
-            Vector3 TargetRotation = new Vector3(0, rotationIndex * 90, 0);
+            Vector3 TargetRotation = new(0, rotationIndex * 90, 0);
 
             if (instant)
             {
@@ -45,12 +55,24 @@ namespace Gameplay.Views
                 transform.DOLocalRotate(TargetRotation, 0.2f)
                 .SetEase(rotationEase);
             }
-
-            spriteRenderer.color = isPowered ? colorOn : colorOff;
+            IsPowered = isPowered;
+            spriteRenderer.color = IsPowered ? colorOn : colorOff;
         }
         public void SetAsDummy()
         {
-            spriteRenderer.gameObject.SetActive(false);
+
+            IsDummy = true;
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.gameObject.SetActive(false);
+            }
+            transform.localScale = Vector3.one;
+        }
+
+        public void SetAsMisc()
+        {
+
         }
     }
 }

@@ -7,6 +7,7 @@ using Gameplay.Views;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
+
 using System.Threading;
 using UnityEngine;
 
@@ -25,25 +26,42 @@ namespace Gameplay.Core.Controllers
         private float CellSize = 1.5f;
         [SerializeField, TabGroup("Grid Configuration")]
         private Transform GridOrigin;
-        [SerializeField, TabGroup("Grid Configuration")]
-        private int MaxGridSize = 10;
+        //[SerializeField, TabGroup("Grid Configuration")]
+        //private int MaxGridSize = 10;
+
+        [SerializeField, TabGroup("Pool")]
+        private int InitialPoolSize = 50;
 
         [Required, AssetsOnly, BoxGroup("References")]
         [SerializeField] private NodeView NodePrefab;
         [Required, SceneObjectsOnly, BoxGroup("References")]
         [SerializeField] private Transform PiecesContainer;
 
-
+        // O GridModel só conterá peças lógicas (Wire, Source, Lamp). 
+        // Misc e Vazios serão nulos aqui.
         private NodeModel[,] GridModel;
+
         [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
         private readonly List<NodeView> ActiveViews = new();
+
         [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
-        private readonly List<GameObject> DummyViews = new();
+        private readonly List<NodeView> MiscViews = new();
+
+        [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
+        private readonly List<NodeView> DummyViews = new();
+
+        [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
+        private List<NodeView> NodePool = new();
 
         private CancellationTokenSource revealCts;
+        private System.Diagnostics.Stopwatch stopwatch = new();
 
-
-        private void Start()
+        private void Awake()
+        {
+            InitializePool();
+        }
+        [Button]
+        private void StartLevel()
         {
             if (CurrentLevelData != null)
             {
@@ -57,58 +75,146 @@ namespace Gameplay.Core.Controllers
             revealCts?.Dispose();
         }
 
+
+        private void InitializePool()
+        {
+            stopwatch.Start();
+
+            foreach (Transform child in PiecesContainer)
+            {
+                if (child.TryGetComponent(out NodeView node))
+                {
+                    node.gameObject.SetActive(false);
+                    NodePool.Add(node);
+                }
+            }
+            if (NodePool.Count < InitialPoolSize)
+            {
+                ExpandPool(InitialPoolSize - NodePool.Count);
+            }
+            stopwatch.Stop();
+            Debug.Log($"Pool init duration: {stopwatch.Elapsed.TotalSeconds}");
+
+        }
+
         [Button("Load Current Level")]
         public void LoadLevel(LevelDataSO levelData)
         {
+            stopwatch.Restart();
+            stopwatch.Start();
             CurrentLevelData = levelData;
+
+            // Define o tamanho máximo baseado no VisualGridSize (para incluir o cenário de fundo)
+            int MaxGridSize = levelData.VisualGridSize;
 
             revealCts?.Cancel();
             revealCts?.Dispose();
             revealCts = new CancellationTokenSource();
 
-            ClearCurrentLevel();
-
+            ResetLevelState();
             GenerateFullGrid();
+
             if (CameraController != null)
             {
                 CameraController.Setup(MaxGridSize, CellSize, GridOrigin.position);
             }
+
             RevealLevelRoutine(revealCts.Token).Forget();
+            stopwatch.Stop();
+            Debug.Log($"Load Level duration: {stopwatch.Elapsed.TotalSeconds}");
+
         }
 
-        private void ClearCurrentLevel()
+        private void ResetLevelState()
         {
-            foreach (Transform Child in PiecesContainer)
-                Destroy(Child.gameObject);
+            foreach (var Node in NodePool)
+            {
+                Node.gameObject.SetActive(false);
+                Node.transform.DOKill();
+            }
             ActiveViews.Clear();
             DummyViews.Clear();
+            MiscViews.Clear();
             GridModel = null;
         }
 
         private void GenerateFullGrid()
         {
-
             GridModel = new NodeModel[CurrentLevelData.Width, CurrentLevelData.Height];
+
+            int MaxGridSize = Mathf.Max(CurrentLevelData.VisualGridSize, CurrentLevelData.Width, CurrentLevelData.Height);
+            int TotalRequired = MaxGridSize * MaxGridSize;
+
+            if (NodePool.Count < TotalRequired)
+                ExpandPool(TotalRequired - NodePool.Count);
+
+            int PoolIndex = 0;
 
             for (int X = 0; X < MaxGridSize; X++)
             {
                 for (int Y = 0; Y < MaxGridSize; Y++)
                 {
-                    float xPosition = X * CellSize;
-                    float yPosition = Y * CellSize;
-                    Vector3 Position = GridOrigin.position + new Vector3(xPosition, 0, yPosition);
+                    float xPos = X * CellSize;
+                    float yPos = Y * CellSize;
+                    Vector3 Position = GridOrigin.position + new Vector3(xPos, 0, yPos);
 
+                    NodeView ViewInstance = NodePool[PoolIndex];
+                    ViewInstance.gameObject.SetActive(true);
+                    ViewInstance.transform.position = Position;
+                    ViewInstance.gameObject.name = $"X:{X},Y:{Y}";
+                    PoolIndex++;
 
-                    if (IsInsideLevelBounds(X, Y) && CurrentLevelData.Layout[X, Y] != null)
+                    bool isInside = IsInsideLevelBounds(X, Y);
+
+                    if (isInside && CurrentLevelData.Layout[X, Y] != null)
                     {
-                        SpawnRealNode(X, Y, Position);
+
+                        PieceSO pieceData = CurrentLevelData.Layout[X, Y];
+
+                        if (pieceData.PieceType == PieceType.Misc)
+                        {
+                            SetupMiscNode(ViewInstance);
+                        }
+                        else
+                        {
+                            SetupRealNode(X, Y, ViewInstance, pieceData);
+                        }
                     }
                     else
                     {
-                        SpawnDummyNode(Position);
+                        SetupDummyNode(ViewInstance);
                     }
                 }
             }
+        }
+
+        private void ExpandPool(int Amount)
+        {
+            for (int i = 0; i < Amount; i++)
+            {
+                NodeView NewNode = Instantiate(NodePrefab, PiecesContainer);
+                NewNode.gameObject.SetActive(false);
+                NodePool.Add(NewNode);
+            }
+        }
+
+        private void SetupRealNode(int x, int y, NodeView view, PieceSO data)
+        {
+            GridModel[x, y] = new NodeModel(x, y, data, 0);
+            view.Setup(x, y, data.Icon);
+            ActiveViews.Add(view);
+        }
+        private void SetupMiscNode(NodeView view)
+        {
+            view.Setup(-1, -1, null);
+            view.SetAsMisc();
+            MiscViews.Add(view);
+        }
+        private void SetupDummyNode(NodeView view)
+        {
+            view.Setup(-1, -1, null);
+            view.SetAsDummy();
+            DummyViews.Add(view);
         }
 
         private bool IsInsideLevelBounds(int x, int y)
@@ -116,34 +222,8 @@ namespace Gameplay.Core.Controllers
             return x >= 0 && y >= 0 && x < CurrentLevelData.Width && y < CurrentLevelData.Height;
         }
 
-        private void SpawnRealNode(int x, int y, Vector3 position)
-        {
-            PieceSO Definition = CurrentLevelData.Layout[x, y];
-
-
-            GridModel[x, y] = new NodeModel(x, y, Definition, 0);
-
-
-            NodeView ViewInstance = Instantiate(NodePrefab, position, Quaternion.identity, PiecesContainer);
-            ViewInstance.Setup(x, y, Definition.Icon);
-
-            ActiveViews.Add(ViewInstance);
-        }
-
-        private void SpawnDummyNode(Vector3 position)
-        {
-            //TODO: trocar pra um node prefab dummy de vdd ou uma pool?
-            NodeView Dummy = Instantiate(NodePrefab, position, Quaternion.identity, PiecesContainer);
-
-            Dummy.UpdateVisuals(0, false, true);
-            Dummy.SetAsDummy();
-
-            DummyViews.Add(Dummy.gameObject);
-        }
-
         private async UniTaskVoid RevealLevelRoutine(CancellationToken token)
         {
-
             await UniTask.Delay(500, cancellationToken: token);
 
             if (CameraController != null)
@@ -151,13 +231,12 @@ namespace Gameplay.Core.Controllers
                 CameraController.FocusOnLevel(CurrentLevelData, CellSize, GridOrigin.position);
             }
 
-            foreach (var Dummy in DummyViews)
+            foreach (NodeView Dummy in DummyViews)
             {
-
-                Dummy.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InBack).OnComplete(() => Destroy(Dummy));
+                Dummy.transform.DOScale(Vector3.zero, 0.5f)
+                    .SetEase(Ease.InBack)
+                    .OnComplete(() => Dummy.gameObject.SetActive(false));
             }
-            DummyViews.Clear();
-
 
             RecalculateFlow();
             UpdateAllViews();
@@ -175,7 +254,6 @@ namespace Gameplay.Core.Controllers
 
         private void RecalculateFlow()
         {
-
             foreach (var Node in GridModel) if (Node != null) Node.IsPowered = false;
 
             Queue<NodeModel> Queue = new();
@@ -185,7 +263,7 @@ namespace Gameplay.Core.Controllers
                 for (int Y = 0; Y < CurrentLevelData.Height; Y++)
                 {
                     var Node = GridModel[X, Y];
-                    if (Node != null && Node.Type == PieceType.Source)
+                    if (Node != null && Node.PieceType == PieceType.Source)
                     {
                         Node.IsPowered = true;
                         Queue.Enqueue(Node);
@@ -235,9 +313,9 @@ namespace Gameplay.Core.Controllers
         private void CheckWinCondition()
         {
             bool Win = true;
-            foreach (var Node in GridModel)
+            foreach (NodeModel Node in GridModel)
             {
-                if (Node != null && Node.Type == PieceType.Lamp && !Node.IsPowered)
+                if (Node != null && Node.PieceType == PieceType.Lamp && !Node.IsPowered)
                 {
                     Win = false;
                     break;
