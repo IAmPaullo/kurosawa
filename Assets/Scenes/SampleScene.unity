@@ -1937,7 +1937,7 @@ Transform:
   - {fileID: 302788672}
   - {fileID: 680065389}
   - {fileID: 1835740241}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1803751822}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1309801120
 PrefabInstance:
@@ -2347,6 +2347,7 @@ Transform:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 330585546}
+  - {fileID: 2000647543}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1658987953 stripped
@@ -2403,11 +2404,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025f67749e655e145846985a7a15c236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Main::Gameplay.Core.Controllers.CameraController
-  MainCamera: {fileID: 330585545}
+  mainCamera: {fileID: 330585545}
   padding: 2
+  offset: {x: -5, y: 5, z: -5}
   zoomDuration: 1.5
   zoomEase: 10
-  offset: {x: -20, y: 20, z: -20}
+  pauseZoomMultiplier: 1.7
 --- !u!4 &1780562985 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8531724500494475354, guid: b9d294dc398987444b776c7ebe3ab5cc, type: 3}
@@ -2438,10 +2440,11 @@ Transform:
   m_GameObject: {fileID: 1803751821}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1277034920}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1804325219 stripped
@@ -2535,6 +2538,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8531724500494475354, guid: b9d294dc398987444b776c7ebe3ab5cc, type: 3}
   m_PrefabInstance: {fileID: 411074967}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2000647542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2000647543}
+  - component: {fileID: 2000647544}
+  m_Layer: 0
+  m_Name: Save Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2000647543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000647542}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1628438747}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2000647544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000647542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c95c219a26f06b42a81a7d56416f2f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::Gameplay.Managers.SaveManager
 --- !u!1001 &2015358745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2640,6 +2687,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5aee75f60db526b4fa7cc97320634cd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Main::Gameplay.Managers.MatchSetupSystem
+  Campaign: {fileID: 11400000, guid: 422ce17ca8caa24458ee312c9f43dcb8, type: 2}
+  SaveManager: {fileID: 2000647544}
   DebugLevel: {fileID: 11400000, guid: af86261d052c778498c93852793538dd, type: 2}
   AutoStart: 1
 --- !u!1001 &2027913888
@@ -2807,4 +2856,3 @@ SceneRoots:
   - {fileID: 2044820056}
   - {fileID: 1803751822}
   - {fileID: 1154457599}
-  - {fileID: 1277034920}

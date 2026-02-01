@@ -5,9 +5,16 @@ namespace Gameplay.Core
     [Serializable]
     public class PlayerProfile
     {
-        public string LastCompletedLevelID; // ID único (GUID ou string fixa)
-        public int Coins;
-        public Dictionary<string, int> LevelStars; // ID da fase -> Estrelas
-        public bool IsSoundMuted;
+
+        public int LastCompletedLevelIndex = -1;
+
+
+        // Key: Level ID (string), Value: Stars (int)
+        public Dictionary<string, int> LevelProgress = new Dictionary<string, int>();
+
+        public int Coins = 0;
+        public bool IsSoundMuted = false;
     }
 }
+
+
