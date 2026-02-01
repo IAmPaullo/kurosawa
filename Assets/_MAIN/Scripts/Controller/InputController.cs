@@ -56,7 +56,7 @@ namespace Gameplay.Core.Controllers
         private void PerformRaycast(Vector2 screenPosition)
         {
             Ray Ray = MainCamera.ScreenPointToRay(screenPosition);
-            
+
 
             if (Physics.Raycast(Ray, out RaycastHit Hit, 100f, InteractableLayer))
             {

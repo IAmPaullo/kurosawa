@@ -20,9 +20,3 @@ namespace Gameplay.Core
         Misc
     }
 }
-
-
-namespace Gameplay.Core.Events
-{
-    public struct LevelCompletedEvent : IEvent { }
-}
