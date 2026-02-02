@@ -95,10 +95,8 @@ namespace Gameplay.UI
             }
         }
 
-        private void NormalizeScrolLRectPosition()
+        private void NormalizeScrollRectPosition()
         {
-            //RectTransform rt = contentContainer.GetComponent<RectTransform>();
-            //rt.position *= Vector2.right; // reset content y pos
             scrollRect.verticalNormalizedPosition = 1f;
         }
 
@@ -112,7 +110,6 @@ namespace Gameplay.UI
         private void EnsurePoolSize(int requiredSize)
         {
             int currentSize = buttonPool.Count;
-
 
             if (currentSize < requiredSize)
             {
