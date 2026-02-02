@@ -55,6 +55,36 @@ namespace Gameplay.Managers
             Debug.Log(" Game Saved");
         }
 
+        public void RegisterLevelGrade(int levelIndex, string grade)
+        {
+            bool improved = false;
+
+            if (!CurrentProfile.LevelGrades.ContainsKey(levelIndex))
+            {
+                CurrentProfile.LevelGrades[levelIndex] = grade;
+                improved = true;
+            }
+            else
+            {
+                // TODO: helper method for comparison
+                string currentGrade = CurrentProfile.LevelGrades[levelIndex];
+                if (IsGradeBetter(grade, currentGrade))
+                {
+                    CurrentProfile.LevelGrades[levelIndex] = grade;
+                    improved = true;
+                }
+            }
+
+            if (improved)
+                SaveProfile();
+        }
+
+        private bool IsGradeBetter(string newGrade, string oldGrade)
+        {
+            return newGrade[0] < oldGrade[0];
+        }
+
+
         [Button]
         public void ResetProgress()
         {

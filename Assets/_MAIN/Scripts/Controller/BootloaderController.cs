@@ -1,27 +1,34 @@
+using DG.Tweening;
+using Gameplay.Boot.Events;
 using System.Collections;
 using UnityEngine;
 
-public class BootloaderController : MonoBehaviour
+namespace Gameplay.Boot
 {
-    [SerializeField] private int nextSceneIndex = 1;
 
-    private IEnumerator Start()
+    public class BootloaderController : MonoBehaviour
     {
+        [SerializeField] private int nextSceneIndex = 1;
 
-        Debug.Log("Initializing Systems");
-
-
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("Loading Menu");
-
-        if (SceneEvents.Instance != null)
+        private IEnumerator Start()
         {
-            SceneEvents.Instance.TriggerChangeSceneAsync(nextSceneIndex);
-        }
-        else
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(nextSceneIndex);
+
+            Debug.Log("Initializing Systems");
+
+
+            yield return new WaitForSeconds(1f);
+
+            Debug.Log("Loading Menu");
+
+            if (SceneEvents.Instance != null)
+            {
+                SceneEvents.Instance.TriggerChangeSceneAsync(nextSceneIndex);
+
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(nextSceneIndex);
+            }
         }
     }
 }

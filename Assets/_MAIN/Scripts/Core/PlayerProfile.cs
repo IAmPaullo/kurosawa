@@ -10,8 +10,8 @@ namespace Gameplay.Core
 
 
         // Key: Level ID (string), Value: Stars (int)
-        public Dictionary<string, int> LevelProgress = new Dictionary<string, int>();
-
+        public Dictionary<string, int> LevelProgress = new();
+        public Dictionary<int, string> LevelGrades = new();
         public int Coins = 0;
         public bool IsSoundMuted = false;
     }

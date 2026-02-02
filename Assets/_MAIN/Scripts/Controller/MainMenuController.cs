@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Gameplay.Boot.Events;
 using Gameplay.Managers;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -31,7 +32,7 @@ public class MainMenuController : MonoBehaviour
 
     private void Start()
     {
-
+        EventBus<SetupMenuEvent>.Raise(new() { });
         if (saveManager == null)
             saveManager = FindFirstObjectByType<SaveManager>();
 

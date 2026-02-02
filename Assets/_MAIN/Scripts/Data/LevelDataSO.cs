@@ -13,6 +13,15 @@ namespace Gameplay.Core.Data
     [CreateAssetMenu(fileName = "New Level", menuName = "Level/New Level Data")]
     public class LevelDataSO : SerializedScriptableObject
     {
+        [Title("Scoring")]
+        [SuffixLabel("seconds")]
+        public float TargetTimeS = 30f;
+        [SuffixLabel("seconds")]
+        public float TargetTimeA = 60f;
+        [SuffixLabel("seconds")]
+        public float TargetTimeB = 120f;
+
+
         [Title("Level Settings")]
         [OnValueChanged("ResizeMatrix")]
         [Min(1)]
@@ -29,6 +38,14 @@ namespace Gameplay.Core.Data
         [Title("Layout")]
         [TableMatrix(SquareCells = true, HorizontalTitle = "Grid Layout", DrawElementMethod = "DrawPieceElement")]
         public PieceSO[,] Layout = new PieceSO[4, 4];
+
+        public string CalculateGrade(float timeElapsed)
+        {
+            if (timeElapsed <= TargetTimeS) return "S";
+            if (timeElapsed <= TargetTimeA) return "A";
+            if (timeElapsed <= TargetTimeB) return "B";
+            return "C";
+        }
 
 #if UNITY_EDITOR
         private PieceSO DrawPieceElement(Rect rect, PieceSO value)

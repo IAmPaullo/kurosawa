@@ -1,0 +1,130 @@
+using Gameplay.Core.Data;
+using Gameplay.Managers;
+using Sirenix.OdinInspector;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using Gameplay.Boot.Events;
+using System.Collections;
+
+namespace Gameplay.UI
+{
+    public class LevelSelectionController : MonoBehaviour
+    {
+        [BoxGroup("References")]
+        [SerializeField] private ScrollRect scrollRect;
+        [SerializeField, Required] private Transform contentContainer;
+
+        [BoxGroup("References")]
+        [SerializeField, Required] private LevelButton_UI levelButtonPrefab;
+
+        [BoxGroup("Data")]
+        [SerializeField, Required] private CampaignSO campaign;
+
+        [BoxGroup("Dependencies")]
+        [SerializeField] private SaveManager saveManager;
+        [SerializeField] private MainMenuController mainMenuController;
+
+        private List<LevelButton_UI> buttonPool = new();
+
+        private EventBinding<SetupMenuEvent> setupMenuBinding;
+
+        private void Awake()
+        {
+            contentContainer.GetComponentsInChildren(true, buttonPool);
+        }
+        private void OnEnable()
+        {
+            setupMenuBinding = new(OnSetupEvent);
+            EventBus<SetupMenuEvent>.Register(setupMenuBinding);
+        }
+        private void OnDestroy()
+        {
+            EventBus<SetupMenuEvent>.Deregister(setupMenuBinding);
+        }
+        private void OnSetupEvent(SetupMenuEvent _)
+        {
+            if (saveManager == null) saveManager = FindFirstObjectByType<SaveManager>();
+            RefreshLevelList();
+        }
+
+        [Button("Force Refresh")]
+        public void RefreshLevelList()
+        {
+            if (campaign == null || saveManager == null) return;
+
+            int totalLevels = campaign.Levels.Count;
+            int unlockedIndexLimit = saveManager.CurrentProfile.LastCompletedLevelIndex + 1;
+
+
+            EnsurePoolSize(totalLevels);
+
+
+            for (int i = 0; i < buttonPool.Count; i++)
+            {
+                LevelButton_UI buttonView = buttonPool[i];
+
+
+                if (i < totalLevels)
+                {
+                    buttonView.gameObject.SetActive(true);
+
+                    int levelIndex = i;
+                    bool isUnlocked = levelIndex <= unlockedIndexLimit;
+                    string grade = "";
+
+                    if (isUnlocked)
+                    {
+                        grade = TryFindGradeFromLevelIndex(levelIndex);
+                    }
+
+
+
+                    buttonView.Setup(
+                        levelIndex,
+                        isUnlocked,
+                        grade,
+                        () => mainMenuController.SelectLevelAndPlay(levelIndex)
+                    );
+                }
+                else
+                {
+                    buttonView.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        private IEnumerator NormalizeScrolLRectPosition()
+        {
+            yield return new WaitForEndOfFrame();
+            RectTransform rt = contentContainer.GetComponent<RectTransform>();
+            rt.position *= Vector2.right; // reset content y pos
+            scrollRect.verticalNormalizedPosition = 1f;
+        }
+
+        private string TryFindGradeFromLevelIndex(int i)
+        {
+            string grade = "<3";
+            saveManager.CurrentProfile.LevelGrades.TryGetValue(i, out grade);
+            return grade;
+        }
+
+        private void EnsurePoolSize(int requiredSize)
+        {
+            int currentSize = buttonPool.Count;
+
+
+            if (currentSize < requiredSize)
+            {
+                int missingCount = requiredSize - currentSize;
+                for (int k = 0; k < missingCount; k++)
+                {
+                    LevelButton_UI newBtn = Instantiate(levelButtonPrefab, contentContainer);
+                    buttonPool.Add(newBtn);
+                }
+            }
+            StartCoroutine(NormalizeScrolLRectPosition());
+
+        }
+    }
+}

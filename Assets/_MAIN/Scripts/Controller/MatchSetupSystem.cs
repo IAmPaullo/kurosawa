@@ -27,6 +27,11 @@ namespace Gameplay.Managers
         [ShowInInspector, ReadOnly] public bool IsPaused { get; private set; }
         [ShowInInspector, ReadOnly] private int currentSessionLevelIndex;
 
+        [ShowInInspector, ReadOnly] private float levelStartTime;
+        [ShowInInspector, ReadOnly] private float totalPausedDuration;
+        [ShowInInspector, ReadOnly] private float lastPauseStartTime;
+        [ShowInInspector, ReadOnly] private float finalElapsedTime;
+
         private EventBinding<RequestPauseEvent> pauseRequestBind;
         private EventBinding<RequestResumeEvent> resumeRequestBind;
         private EventBinding<LevelCompletedEvent> levelCompletedBind;
@@ -116,10 +121,15 @@ namespace Gameplay.Managers
 
             currentSessionLevelIndex = levelIndex;
 
+            totalPausedDuration = 0f;
+            finalElapsedTime = 0f;
+
             Debug.Log($"Preparing Level {levelIndex}");
             EventBus<MatchPrepareEvent>.Raise(new MatchPrepareEvent { LevelData = data });
 
             await UniTask.Delay(200);
+
+            levelStartTime = Time.time;
 
             Debug.Log("MatchStartEvent Raised. Starting...");
             EventBus<MatchStartEvent>.Raise(new MatchStartEvent());
@@ -130,7 +140,7 @@ namespace Gameplay.Managers
             if (IsPaused) return;
             IsPaused = true;
 
-
+            lastPauseStartTime = Time.time;
             if (CameraController != null)
                 CameraController.SetPaused(true);
 
@@ -143,6 +153,8 @@ namespace Gameplay.Managers
             if (!IsPaused) return;
             IsPaused = false;
 
+            float duration = Time.time - lastPauseStartTime;
+            totalPausedDuration += duration;
 
             if (CameraController != null)
                 CameraController.SetPaused(false);
@@ -154,9 +166,24 @@ namespace Gameplay.Managers
         private void OnLevelCompleted(LevelCompletedEvent evt)
         {
             Debug.Log($" Level {currentSessionLevelIndex} Complete. Saving progress");
+
+            float endTime = Time.time;
+            finalElapsedTime = endTime - levelStartTime - totalPausedDuration;
+
+            string grade = CalculatePlayerGrade();
             SaveManager.RegisterLevelCompletion(currentSessionLevelIndex);
+            SaveManager.RegisterLevelGrade(currentSessionLevelIndex, grade);
             EventBus<MatchEndEvent>.Raise(new MatchEndEvent());
         }
+
+        private string CalculatePlayerGrade()
+        {
+            LevelDataSO data = Campaign.GetLevel(currentSessionLevelIndex);
+            string grade = data.CalculateGrade(finalElapsedTime);
+            Debug.Log($"Grade Achieved: {grade}");
+            return grade;
+        }
+
         private void OnRequestNextLevel(RequestNextLevelEvent evt)
         {
             int nextIndex = currentSessionLevelIndex + 1;
