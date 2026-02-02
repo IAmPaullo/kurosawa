@@ -45,7 +45,7 @@ namespace Gameplay.UI
         private void OnSetupEvent(SetupMenuEvent _)
         {
             if (saveManager == null) saveManager = FindFirstObjectByType<SaveManager>();
-            scrollRect.onValueChanged.AddListener((_) => NormalizeScrolLRectPosition());
+            scrollRect.onValueChanged.AddListener((_) => NormalizeScrollRectPosition());
             RefreshLevelList();
         }
 
