@@ -37,13 +37,28 @@ namespace Gameplay.Managers
         {
             if (SaveManager == null)
             {
-                Debug.LogError("SaveManager is null");
+                Debug.LogError("SaveManager missing");
                 return;
             }
+
             if (AutoStart)
             {
-                int savedIndex = SaveManager.GetNextLevelIndex();
-                InitializeMatchRoutine(savedIndex).Forget();
+                int levelToLoad;
+
+                if (SaveManager.LevelLoadOverride != -1)
+                {
+                    levelToLoad = SaveManager.LevelLoadOverride;
+                    Debug.Log($"Loading Selected level: {levelToLoad}");
+                }
+                else
+                {
+                    levelToLoad = SaveManager.GetNextLevelIndex();
+                    Debug.Log($"loading progress level: {levelToLoad}");
+                }
+
+                SaveManager.LevelLoadOverride = -1;
+
+                InitializeMatchRoutine(levelToLoad).Forget();
             }
         }
 
