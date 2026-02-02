@@ -12,6 +12,10 @@ namespace Gameplay.Managers
         [ShowInInspector, ReadOnly]
         public PlayerProfile CurrentProfile { get; private set; }
 
+        [ShowInInspector, ReadOnly]
+        public int LevelLoadOverride { get; set; } = -1;
+        // -1 Use saved progress. any other value force that level value
+
         private string SavePath => Path.Combine(Application.persistentDataPath, "player_save.json");
 
         private void Awake()
