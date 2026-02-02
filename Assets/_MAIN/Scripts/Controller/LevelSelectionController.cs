@@ -45,6 +45,7 @@ namespace Gameplay.UI
         private void OnSetupEvent(SetupMenuEvent _)
         {
             if (saveManager == null) saveManager = FindFirstObjectByType<SaveManager>();
+            scrollRect.onValueChanged.AddListener((_) => NormalizeScrolLRectPosition());
             RefreshLevelList();
         }
 
@@ -94,11 +95,10 @@ namespace Gameplay.UI
             }
         }
 
-        private IEnumerator NormalizeScrolLRectPosition()
+        private void NormalizeScrolLRectPosition()
         {
-            yield return new WaitForEndOfFrame();
-            RectTransform rt = contentContainer.GetComponent<RectTransform>();
-            rt.position *= Vector2.right; // reset content y pos
+            //RectTransform rt = contentContainer.GetComponent<RectTransform>();
+            //rt.position *= Vector2.right; // reset content y pos
             scrollRect.verticalNormalizedPosition = 1f;
         }
 
@@ -123,8 +123,6 @@ namespace Gameplay.UI
                     buttonPool.Add(newBtn);
                 }
             }
-            StartCoroutine(NormalizeScrolLRectPosition());
-
         }
     }
 }
