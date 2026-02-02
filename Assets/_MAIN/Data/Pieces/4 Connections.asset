@@ -15,4 +15,6 @@ MonoBehaviour:
   ID: 4 Way
   pieceType: 0
   baseConnections: 15
+  mainMesh: {fileID: 3399605039221437822, guid: e62619ad4bfacaa4aa0079672e664349, type: 3}
+  glowMesh: {fileID: -7889413689959419693, guid: e62619ad4bfacaa4aa0079672e664349, type: 3}
   Icon: {fileID: 822952047, guid: 60ef19dffd917c342b866e18c64a437c, type: 3}

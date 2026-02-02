@@ -15,4 +15,6 @@ MonoBehaviour:
   ID: BaixoDireita
   pieceType: 0
   baseConnections: 6
+  mainMesh: {fileID: -8168585829983048746, guid: f290e0ff7fc200b4b904fe71aae2e67d, type: 3}
+  glowMesh: {fileID: -3512200634813589074, guid: f290e0ff7fc200b4b904fe71aae2e67d, type: 3}
   Icon: {fileID: 2130524455, guid: 60ef19dffd917c342b866e18c64a437c, type: 3}

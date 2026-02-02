@@ -15,4 +15,6 @@ MonoBehaviour:
   ID: LineStraight_00
   pieceType: 0
   baseConnections: 10
+  mainMesh: {fileID: -2405365958620393163, guid: a84c17abe2d330e489b892873722136e, type: 3}
+  glowMesh: {fileID: 8065847030607368487, guid: a84c17abe2d330e489b892873722136e, type: 3}
   Icon: {fileID: 438898475, guid: 60ef19dffd917c342b866e18c64a437c, type: 3}

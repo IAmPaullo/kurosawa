@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Main::PieceSO
   ID: Source
   pieceType: 1
-  baseConnections: 5
+  baseConnections: 15
+  mainMesh: {fileID: -2159965483007997719, guid: 4ce4dfae3f9fcb94faf78f05bf89f577, type: 3}
+  glowMesh: {fileID: -1785507700921164021, guid: 4ce4dfae3f9fcb94faf78f05bf89f577, type: 3}
   Icon: {fileID: 21300000, guid: 032e573374c7fb842be92eb91a88c06d, type: 3}
