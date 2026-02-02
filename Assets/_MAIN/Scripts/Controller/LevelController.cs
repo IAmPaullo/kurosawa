@@ -209,20 +209,20 @@ namespace Gameplay.Core.Controllers
         private void SetupRealNode(int x, int y, NodeView view, PieceSO data)
         {
             GridModel[x, y] = new NodeModel(x, y, data, 0);
-            view.Setup(x, y, data.Icon);
+            view.Setup(x, y, data.MainMesh, data.GlowMesh);
             ActiveViews.Add(view);
         }
 
         private void SetupMiscNode(NodeView view)
         {
-            view.Setup(-1, -1, null);
+            view.Setup(-1, -1, null, null);
             view.SetAsMisc();
             MiscViews.Add(view);
         }
 
         private void SetupDummyNode(NodeView view)
         {
-            view.Setup(-1, -1, null);
+            view.Setup(-1, -1, null, null);
             view.SetAsDummy();
             DummyViews.Add(view);
         }

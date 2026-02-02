@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Gameplay.Core;
+using Gameplay.Core.Events;
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
@@ -8,19 +9,23 @@ namespace Gameplay.Views
 {
     public class NodeView : MonoBehaviour
     {
-        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private PieceView pieceView;
         [SerializeField] private Color colorOn = Color.cyan;
         [SerializeField] private Color colorOff = Color.gray;
         [SerializeField] private Ease rotationEase = Ease.Linear;
-
+        [SerializeField] private MeshRenderer meshRenderer;
 
         [ShowInInspector, ReadOnly] public int XPosition { get; private set; }
         [ShowInInspector, ReadOnly] public int YPosition { get; private set; }
         [ShowInInspector, ReadOnly] public bool IsDummy { get; private set; }
         [ShowInInspector, ReadOnly] public bool IsPowered { get; private set; }
 
+        private EventBinding<ThemeUpdateEvent> themeUpdateBind;
+        private MaterialPropertyBlock mainMpb;
+        private static readonly int TopColorId = Shader.PropertyToID("_TopColor");
+        private static readonly int BottomColorId = Shader.PropertyToID("_BottomColor");
 
-        public void Setup(int x, int y, Sprite icon)
+        public void Setup(int x, int y, Mesh mainMesh, Mesh glowMesh)
         {
             XPosition = x;
             YPosition = y;
@@ -29,15 +34,11 @@ namespace Gameplay.Views
             transform.localScale = Vector3.one;
             transform.localRotation = Quaternion.identity;
 
-            if (spriteRenderer != null)
+            if (pieceView != null && mainMesh != null)
             {
-
-                spriteRenderer.gameObject.SetActive(true);
-
-                spriteRenderer.sprite = icon;
-                spriteRenderer.transform.localRotation = Quaternion.Euler(90, 0, 0);
+                pieceView.SetupPiece(mainMesh, glowMesh);
             }
-
+            EnsureMpbs();
             UpdateVisuals(0, false, true);
         }
 
@@ -59,16 +60,16 @@ namespace Gameplay.Views
                     .SetLink(gameObject);
             }
             IsPowered = isPowered;
-            spriteRenderer.color = IsPowered ? colorOn : colorOff;
+            pieceView.PiecePowerRoutine(IsPowered, instant);
         }
         public void SetAsDummy()
         {
 
             IsDummy = true;
 
-            if (spriteRenderer != null)
+            if (pieceView != null)
             {
-                spriteRenderer.gameObject.SetActive(false);
+                pieceView.gameObject.SetActive(false);
             }
             transform.localScale = Vector3.one;
         }
@@ -76,6 +77,49 @@ namespace Gameplay.Views
         public void SetAsMisc()
         {
 
+        }
+        private void EnsureMpbs()
+        {
+            if (mainMpb == null)
+                mainMpb = new MaterialPropertyBlock();
+            if (mainMpb == null)
+                Debug.LogError($"main mpb on {gameObject.name} is null");
+        }
+
+        private void OnEnable()
+        {
+            themeUpdateBind = new(OnThemeUpdate);
+            EventBus<ThemeUpdateEvent>.Register(themeUpdateBind);
+        }
+
+        private void OnDestroy()
+        {
+            EventBus<ThemeUpdateEvent>.Deregister(themeUpdateBind);
+        }
+
+        private void OnThemeUpdate(ThemeUpdateEvent evt)
+        {
+            GradientSO theme = evt.Theme;
+
+            Color topColor = theme.MainGradient.Evaluate(0);
+            Color bottomColor = theme.MainGradient.Evaluate(1);
+            Color glowColor = Color.white;
+
+            UpdateTheme(topColor, bottomColor);
+            pieceView.UpdateTheme(topColor, bottomColor, glowColor);
+        }
+
+        public void UpdateTheme(Color topColor, Color bottomColor)
+        {
+            EnsureMpbs();
+
+            if (meshRenderer)
+            {
+                meshRenderer.GetPropertyBlock(mainMpb);
+                mainMpb.SetColor(TopColorId, topColor);
+                mainMpb.SetColor(BottomColorId, bottomColor);
+                meshRenderer.SetPropertyBlock(mainMpb);
+            }
         }
     }
 }

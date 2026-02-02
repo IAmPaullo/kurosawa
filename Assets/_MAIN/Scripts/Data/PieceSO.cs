@@ -17,6 +17,11 @@ namespace Gameplay.Core.Data
 
         public Direction BaseConnections => baseConnections;
 
+        [SerializeField] private Mesh mainMesh;
+        [SerializeField] private Mesh glowMesh;
+        public Mesh GlowMesh => glowMesh;
+        public Mesh MainMesh => mainMesh;
+
         [Title("Visuals")]
         [PreviewField] public Sprite Icon;
     }

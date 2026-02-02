@@ -1,6 +1,4 @@
 using Sirenix.OdinInspector;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New UI Theme", menuName = "UI/Theme Data")]
@@ -10,22 +8,33 @@ public class GradientSO : ScriptableObject
     public Gradient MainGradient;
     public Color TextColor = Color.white;
     public Color ButtonColor = Color.white;
+    [ColorUsage(true, true)]
+    public Color GlowColor = Color.white;
+
+
+    [ShowInInspector, ReadOnly, BoxGroup("Gradient Preview")]
+    public Color TopColor => GetTopColor();
+    [SerializeField, Range(0, 1), BoxGroup("Gradient Preview")]
+    private float topColorThreshold = 0f;
+    [ShowInInspector, ReadOnly, BoxGroup("Gradient Preview")]
+    public Color BottomColor => GetBottomColor();
+    [SerializeField, Range(0, 1), BoxGroup("Gradient Preview")]
+    private float bottomColorThreshold = 1f;
 
     [Title("Settings")]
     public bool UseDarkText = false;
-}
 
 
-[CreateAssetMenu(menuName = "UI/Theme/New Theme Library", fileName = "GradientLibrary")]
-public class GradientLibrarySO : ScriptableObject
-{
-    [Serializable]
-    public class GradientEntry
+    Color GetTopColor()
     {
-        public string Name;
-        public Gradient Gradient;
-        public Texture2D Preview;
+        if (MainGradient == null)
+            return Color.black;
+        return MainGradient.Evaluate(topColorThreshold);
     }
-
-    public List<GradientEntry> Entries = new();
+    Color GetBottomColor()
+    {
+        if (MainGradient == null)
+            return Color.black;
+        return MainGradient.Evaluate(bottomColorThreshold);
+    }
 }
