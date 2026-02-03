@@ -117,29 +117,25 @@ namespace Gameplay.Core.Controllers
 
         private void GetCameraTarget(int Width, int Height, float CellSize, Vector3 GridOrigin, out Vector3 Position, out float Size)
         {
-            float WorldWidth = Width * CellSize;
-            float WorldHeight = Height * CellSize;
+            float worldWidth = Width * CellSize;
+            float worldHeight = Height * CellSize;
 
-            float CenterX = (WorldWidth - CellSize) / 2f;
-            float CenterZ = (WorldHeight - CellSize) / 2f;
+            // GridOrigin é canto -> centro é metade do tamanho
+            float centerX = worldWidth * 0.5f;
+            float centerZ = worldHeight * 0.5f;
 
-            Vector3 Center = GridOrigin + new Vector3(CenterX, 0, CenterZ);
-            Position = Center + offset;
+            Vector3 center = GridOrigin + new Vector3(centerX, 0f, centerZ);
+            Position = center + offset;
 
-            float BoundsHeight = WorldHeight + padding;
-            float BoundsWidth = WorldWidth + padding;
+            float boundsHeight = worldHeight + padding;
+            float boundsWidth = worldWidth + padding;
 
-            float ScreenRatio = (float)Screen.width / Screen.height;
-            float TargetRatio = BoundsWidth / BoundsHeight;
+            float screenRatio = mainCamera.aspect;
+            float targetRatio = boundsWidth / boundsHeight;
 
-            if (ScreenRatio >= TargetRatio)
-            {
-                Size = BoundsHeight / 2f;
-            }
-            else
-            {
-                Size = (BoundsWidth / ScreenRatio) / 2f;
-            }
+            Size = (screenRatio >= targetRatio)
+                ? boundsHeight * 0.5f
+                : (boundsWidth / screenRatio) * 0.5f;
         }
     }
 }
