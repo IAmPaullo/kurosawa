@@ -22,6 +22,8 @@ namespace Gameplay.Core.Controllers
         private float CellSize = 1.5f;
         [SerializeField, TabGroup("Grid Configuration")]
         private Transform GridOrigin;
+        [SerializeField, TabGroup("Grid Configuration")]
+        private Vector3 PiecesContainerOffset = new(-1.2f, 0, 0);
 
         [SerializeField, TabGroup("Pool")]
         private int InitialPoolSize = 50;
@@ -125,6 +127,7 @@ namespace Gameplay.Core.Controllers
             levelWorldOrigin = GridOrigin.position + new Vector3(levelStartX * CellSize, 0f, levelStartY * CellSize);
 
             GenerateFullGrid();
+            PiecesContainer.position = PiecesContainerOffset;
 
             if (CameraController != null)
             {

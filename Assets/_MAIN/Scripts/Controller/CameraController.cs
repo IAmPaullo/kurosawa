@@ -1,4 +1,4 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using Gameplay.Core.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -47,11 +47,10 @@ namespace Gameplay.Core.Controllers
         {
             cameraTransform = mainCamera.transform;
 
-            GetCameraTarget(MaxGridSize, MaxGridSize, CellSize, GridOrigin, out Vector3 TargetPos, out float TargetSize);
+            GetCameraTarget(MaxGridSize, MaxGridSize, CellSize, GridOrigin, out Vector3 targetPos, out float targetSize, out Quaternion targetRot);
 
-            cameraTransform.position = TargetPos;
-            cameraTransform.LookAt(TargetPos - offset);
-            mainCamera.orthographicSize = TargetSize;
+            cameraTransform.SetPositionAndRotation(targetPos, targetRot);
+            mainCamera.orthographicSize = targetSize;
         }
 
         public void FocusOnLevel(LevelDataSO LevelData, float CellSize, Vector3 GridOrigin)
@@ -82,12 +81,12 @@ namespace Gameplay.Core.Controllers
         {
             if (currentLevelData == null) return;
 
-            GetCameraTarget(currentLevelData.Width, currentLevelData.Height, currentCellSize, currentGridOrigin, out Vector3 TargetPos, out float TargetSize);
-
+            GetCameraTarget(currentLevelData.Width, currentLevelData.Height, currentCellSize, currentGridOrigin,
+                out Vector3 targetPos, out float targetSize, out Quaternion targetRot);
 
             if (isPaused)
             {
-                TargetSize *= pauseZoomMultiplier;
+                targetSize *= pauseZoomMultiplier;
             }
 
 
@@ -96,14 +95,14 @@ namespace Gameplay.Core.Controllers
 
             if (animated && Application.isPlaying)
             {
-                cameraTransform.DOMove(TargetPos, zoomDuration).SetEase(zoomEase).SetUpdate(true); // SetUpdate(true) ignora Time.timeScale = 0
-                mainCamera.DOOrthoSize(TargetSize, zoomDuration).SetEase(zoomEase).SetUpdate(true);
+                cameraTransform.DOMove(targetPos, zoomDuration).SetEase(zoomEase).SetUpdate(true); // SetUpdate(true) ignora Time.timeScale = 0
+                mainCamera.DOOrthoSize(targetSize, zoomDuration).SetEase(zoomEase).SetUpdate(true);
             }
             else
             {
-                cameraTransform.position = TargetPos;
-                cameraTransform.LookAt(TargetPos - offset);
-                mainCamera.orthographicSize = TargetSize;
+                cameraTransform.position = targetPos;
+                cameraTransform.LookAt(targetPos - offset);
+                mainCamera.orthographicSize = targetSize;
             }
         }
 
@@ -115,27 +114,52 @@ namespace Gameplay.Core.Controllers
             }
         }
 
-        private void GetCameraTarget(int Width, int Height, float CellSize, Vector3 GridOrigin, out Vector3 Position, out float Size)
+        private void GetCameraTarget(int width, int height, float cellSize, Vector3 gridOrigin, out Vector3 position, out float size, out Quaternion rotation)
         {
-            float worldWidth = Width * CellSize;
-            float worldHeight = Height * CellSize;
+            float halfCell = cellSize * 0.5f;
 
-            // GridOrigin é canto -> centro é metade do tamanho
-            float centerX = worldWidth * 0.5f;
-            float centerZ = worldHeight * 0.5f;
+            float centerX = (width - 1) * cellSize * 0.5f;
+            float centerZ = (height - 1) * cellSize * 0.5f;
 
-            Vector3 center = GridOrigin + new Vector3(centerX, 0f, centerZ);
-            Position = center + offset;
+            Vector3 center = gridOrigin + new Vector3(centerX, 0f, centerZ);
 
-            float boundsHeight = worldHeight + padding;
-            float boundsWidth = worldWidth + padding;
+            position = center + offset;
+            rotation = Quaternion.LookRotation((center - position).normalized, Vector3.up);
 
-            float screenRatio = mainCamera.aspect;
-            float targetRatio = boundsWidth / boundsHeight;
+            Vector3 c0 = gridOrigin + new Vector3(-halfCell, 0f, -halfCell);
+            Vector3 c1 = gridOrigin + new Vector3((width - 1) * cellSize + halfCell, 0f, -halfCell);
+            Vector3 c2 = gridOrigin + new Vector3(-halfCell, 0f, (height - 1) * cellSize + halfCell);
+            Vector3 c3 = gridOrigin + new Vector3((width - 1) * cellSize + halfCell, 0f, (height - 1) * cellSize + halfCell);
 
-            Size = (screenRatio >= targetRatio)
-                ? boundsHeight * 0.5f
-                : (boundsWidth / screenRatio) * 0.5f;
+            Matrix4x4 view = Matrix4x4.TRS(position, rotation, Vector3.one).inverse;
+
+            Vector3 p0 = view.MultiplyPoint3x4(c0);
+            Vector3 p1 = view.MultiplyPoint3x4(c1);
+            Vector3 p2 = view.MultiplyPoint3x4(c2);
+            Vector3 p3 = view.MultiplyPoint3x4(c3);
+
+            float minX = Mathf.Min(p0.x, p1.x, p2.x, p3.x);
+            float maxX = Mathf.Max(p0.x, p1.x, p2.x, p3.x);
+            float minY = Mathf.Min(p0.y, p1.y, p2.y, p3.y);
+            float maxY = Mathf.Max(p0.y, p1.y, p2.y, p3.y);
+
+            float halfWidth = (maxX - minX) * 0.5f;
+            float halfHeight = (maxY - minY) * 0.5f;
+
+            float aspect = mainCamera.aspect;
+
+            size = Mathf.Max(halfHeight, halfWidth / aspect) + padding;
+
+
+            // GridOrigin is not the rectangle corner in this project
+            // It is the center of the first cell at (0,0)
+            // Because of that the true center is based on (width - 1) and (height - 1) not width and height
+            // We also build the 4 world corners using a half cell margin so the whole board fits
+            // Then we convert those corners into camera view space and measure min max bounds
+            // Finally we pick the larger half extent between height and width divided by aspect and add padding
+
+            // Thanks ChatGPT â™ª
+
         }
     }
 }
