@@ -912,9 +912,6 @@ MonoBehaviour:
   animDuration: 0.5
   moveInEase: 1
   moveOutEase: 1
-  windowFadeDuration: 0.2
-  windowFadeInEase: 1
-  windowFadeOutEase: 1
 --- !u!1001 &276917008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5206,6 +5203,67 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8531724500494475354, guid: b9d294dc398987444b776c7ebe3ab5cc, type: 3}
   m_PrefabInstance: {fileID: 984797352}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1250160993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1250160994}
+  - component: {fileID: 1250160995}
+  m_Layer: 0
+  m_Name: Settings Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1250160994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250160993}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2044820056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1250160995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250160993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa8abf2a6e917c94bb32431f8602957a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::Gameplay.Settings.SettingsManager
+  ScreenMode: 1
+  MasterVolume: {fileID: 11400000, guid: fece31c81fc802a4da54baff6f780d53, type: 2}
+  MusicVolume: {fileID: 11400000, guid: 3996cb2117b958b4d942f682c631d72c, type: 2}
+  HapticsEnabled: {fileID: 11400000, guid: 085db8ad1a8c80148945be31bd7bf3f9, type: 2}
+  View:
+    MasterVolumeSlider: {fileID: 0}
+    MusicVolumeSlider: {fileID: 0}
+    HapticsButton: {fileID: 0}
+    HapticsLabel: {fileID: 0}
+    RestartLevelButton: {fileID: 0}
+    BackToMenuButton: {fileID: 0}
+  RestartLevelRequested:
+    m_PersistentCalls:
+      m_Calls: []
+  BackToMenuRequested:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1252394747 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8531724500494475354, guid: b9d294dc398987444b776c7ebe3ab5cc, type: 3}
@@ -7531,6 +7589,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2018155823}
+  - {fileID: 1250160994}
   - {fileID: 1448806253}
   - {fileID: 944919476}
   - {fileID: 1749126704}
