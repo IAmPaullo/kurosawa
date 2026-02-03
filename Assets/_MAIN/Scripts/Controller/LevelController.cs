@@ -49,6 +49,11 @@ namespace Gameplay.Core.Controllers
         private CancellationTokenSource revealCts;
         private Queue<NodeModel> flowQueue;
 
+        private int currentVisualGridSize;
+        private int levelStartX;
+        private int levelStartY;
+        private Vector3 levelWorldOrigin;
+
         private EventBinding<MatchPrepareEvent> matchPrepareBind;
         private EventBinding<MatchStartEvent> matchStartBind;
         private EventBinding<MatchEndEvent> matchEndBind;
@@ -99,19 +104,32 @@ namespace Gameplay.Core.Controllers
         {
             IsInputActive = false;
             CurrentLevelData = evt.LevelData;
+
             flowQueue = new Queue<NodeModel>(CurrentLevelData.Width * CurrentLevelData.Height);
-            int MaxGridSize = CurrentLevelData.VisualGridSize;
 
             revealCts?.Cancel();
             revealCts?.Dispose();
             revealCts = new CancellationTokenSource();
 
             ResetLevelState();
+
+            // Mantém sua intenção original: grid visual é baseado no VisualGridSize
+            int maxGridSize = CurrentLevelData.VisualGridSize;
+
+            // ADICIONADO: garante que cabe e centraliza o level dentro desse grid visual
+            currentVisualGridSize = Mathf.Max(maxGridSize, CurrentLevelData.Width, CurrentLevelData.Height);
+
+            levelStartX = Mathf.Max(0, (currentVisualGridSize - CurrentLevelData.Width) / 2);
+            levelStartY = Mathf.Max(0, (currentVisualGridSize - CurrentLevelData.Height) / 2);
+
+            levelWorldOrigin = GridOrigin.position + new Vector3(levelStartX * CellSize, 0f, levelStartY * CellSize);
+
             GenerateFullGrid();
 
             if (CameraController != null)
             {
-                CameraController.Setup(MaxGridSize, CellSize, GridOrigin.position);
+                // Mantém sua lógica: no prepare, enquadra o grid visual inteiro
+                CameraController.Setup(currentVisualGridSize, CellSize, GridOrigin.position);
             }
         }
 
@@ -151,17 +169,17 @@ namespace Gameplay.Core.Controllers
         {
             GridModel = new NodeModel[CurrentLevelData.Width, CurrentLevelData.Height];
 
-            int MaxGridSize = Mathf.Max(CurrentLevelData.VisualGridSize, CurrentLevelData.Width, CurrentLevelData.Height);
-            int TotalRequired = MaxGridSize * MaxGridSize;
+            int maxGridSize = currentVisualGridSize;
+            int totalRequired = maxGridSize * maxGridSize;
 
-            if (NodePool.Count < TotalRequired)
-                ExpandPool(TotalRequired - NodePool.Count);
+            if (NodePool.Count < totalRequired)
+                ExpandPool(totalRequired - NodePool.Count);
 
             int PoolIndex = 0;
 
-            for (int X = 0; X < MaxGridSize; X++)
+            for (int X = 0; X < maxGridSize; X++)
             {
-                for (int Y = 0; Y < MaxGridSize; Y++)
+                for (int Y = 0; Y < maxGridSize; Y++)
                 {
                     float xPos = X * CellSize;
                     float yPos = Y * CellSize;
@@ -170,14 +188,20 @@ namespace Gameplay.Core.Controllers
                     NodeView ViewInstance = NodePool[PoolIndex];
                     ViewInstance.gameObject.SetActive(true);
                     ViewInstance.transform.position = Position;
+
+
+                    int levelX = X - levelStartX;
+                    int levelY = Y - levelStartY;
+
                     ViewInstance.gameObject.name = $"X:{X},Y:{Y}";
+
                     PoolIndex++;
 
-                    bool isInside = IsInsideLevelBounds(X, Y);
+                    bool isInsideLevel = IsInsideLevelBounds(levelX, levelY);
 
-                    if (isInside && CurrentLevelData.Layout[X, Y] != null)
+                    if (isInsideLevel && CurrentLevelData.Layout[levelX, levelY] != null)
                     {
-                        PieceSO pieceData = CurrentLevelData.Layout[X, Y];
+                        PieceSO pieceData = CurrentLevelData.Layout[levelX, levelY];
 
                         if (pieceData.PieceType == PieceType.Misc)
                         {
@@ -185,7 +209,7 @@ namespace Gameplay.Core.Controllers
                         }
                         else
                         {
-                            SetupRealNode(X, Y, ViewInstance, pieceData);
+                            SetupRealNode(levelX, levelY, ViewInstance, pieceData);
                         }
                     }
                     else
@@ -238,7 +262,7 @@ namespace Gameplay.Core.Controllers
 
             if (CameraController != null)
             {
-                CameraController.FocusOnLevel(CurrentLevelData, CellSize, GridOrigin.position);
+                CameraController.FocusOnLevel(CurrentLevelData, CellSize, levelWorldOrigin);
             }
 
             foreach (NodeView Dummy in DummyViews)
