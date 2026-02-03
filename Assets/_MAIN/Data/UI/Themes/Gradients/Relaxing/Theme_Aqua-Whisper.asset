@@ -44,4 +44,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   TextColor: {r: 0.08, g: 0.1, b: 0.14, a: 1}
   ButtonColor: {r: 0.59607846, g: 0.8813726, b: 0.9019608, a: 1}
+  GlowColor: {r: 1.2885368, g: 1.5492644, b: 2.1509433, a: 1}
+  topColorThreshold: 0
+  bottomColorThreshold: 1
   UseDarkText: 1
