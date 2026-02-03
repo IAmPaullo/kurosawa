@@ -9,7 +9,12 @@ namespace Gameplay.Core.Controllers
     {
         [SerializeField, BoxGroup("References")]
         private Camera mainCamera;
+        [SerializeField, BoxGroup("References")]
+        private Renderer groundRenderer;
         private Transform cameraTransform;
+
+        [SerializeField, BoxGroup("Animation")]
+        private float nearClearance = 0.5f;
 
         [SerializeField, BoxGroup("Animation"), OnValueChanged(nameof(RefreshCameraPosition))]
         private float padding = 2.0f;
@@ -114,6 +119,7 @@ namespace Gameplay.Core.Controllers
             }
         }
 
+        /// <summary>Fits the board in ortho and pushes the camera back to avoid near-plane clipping with no framing change(or minimal).</summary>
         private void GetCameraTarget(int width, int height, float cellSize, Vector3 gridOrigin, out Vector3 position, out float size, out Quaternion rotation)
         {
             float halfCell = cellSize * 0.5f;
@@ -159,6 +165,48 @@ namespace Gameplay.Core.Controllers
             // Finally we pick the larger half extent between height and width divided by aspect and add padding
 
             // Thanks ChatGPT ♪
+
+            float nearTarget = mainCamera.nearClipPlane + nearClearance;
+
+            Matrix4x4 viewDepth = Matrix4x4.TRS(position, rotation, Vector3.one).inverse;
+
+            float minZ = float.PositiveInfinity;
+
+            void ConsiderPoint(Vector3 worldPoint)
+            {
+                float z = viewDepth.MultiplyPoint3x4(worldPoint).z;
+                if (z < minZ) minZ = z;
+            }
+
+            // gets grid all 4 corners
+            ConsiderPoint(c0);
+            ConsiderPoint(c1);
+            ConsiderPoint(c2);
+            ConsiderPoint(c3);
+
+            // all 8 corners from the floor cube (TODO:Change this to a plane check)
+            if (groundRenderer != null)
+            {
+                Bounds b = groundRenderer.bounds;
+                Vector3 e = b.extents;
+                Vector3 o = b.center;
+
+                ConsiderPoint(o + new Vector3(e.x, e.y, e.z));
+                ConsiderPoint(o + new Vector3(e.x, e.y, -e.z));
+                ConsiderPoint(o + new Vector3(e.x, -e.y, e.z));
+                ConsiderPoint(o + new Vector3(e.x, -e.y, -e.z));
+                ConsiderPoint(o + new Vector3(-e.x, e.y, e.z));
+                ConsiderPoint(o + new Vector3(-e.x, e.y, -e.z));
+                ConsiderPoint(o + new Vector3(-e.x, -e.y, e.z));
+                ConsiderPoint(o + new Vector3(-e.x, -e.y, -e.z));
+            }
+            //if something is before the near clip, pushes the camera away
+            float pushBack = nearTarget - minZ;
+            if (pushBack > 0f)
+            {
+                Vector3 forward = rotation * Vector3.forward;
+                position -= forward * pushBack;
+            }
 
         }
     }

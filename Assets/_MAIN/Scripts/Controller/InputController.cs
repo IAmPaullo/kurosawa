@@ -17,7 +17,7 @@ namespace Gameplay.Core.Controllers
         [SerializeField] private LayerMask InteractableLayer;
 
         [SerializeField, BoxGroup("Settings")]
-        private float interactionCooldown = 0.15f; 
+        private float interactionCooldown = 0.15f;
 
         private float lastInteractionTime;
 
@@ -64,7 +64,7 @@ namespace Gameplay.Core.Controllers
             Ray Ray = MainCamera.ScreenPointToRay(screenPosition);
 
 
-            if (Physics.Raycast(Ray, out RaycastHit Hit, 100f, InteractableLayer))
+            if (Physics.Raycast(Ray, out RaycastHit Hit, Mathf.Infinity, InteractableLayer))
             {
                 if (Hit.collider.TryGetComponent(out NodeView Node))
                 {
