@@ -853,7 +853,7 @@ GameObject:
   - component: {fileID: 267989144}
   - component: {fileID: 267989145}
   m_Layer: 0
-  m_Name: Game UI Controller
+  m_Name: Game UI Presenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -884,34 +884,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 267989143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b88cfc973857be4bbc7cb6453c891cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 843ceca723d52354db3edc9ab1c508aa, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Main::GameUIController
-  overlayUICanvas: {fileID: 1612463403}
-  background: {fileID: 1874160964}
-  canvasGroup: {fileID: 1874160966}
-  topSideGroup: {fileID: 845844196}
-  rightSideGroup: {fileID: 1190738921}
-  bottomSideGroup: {fileID: 383182776}
-  themesWindow: {fileID: 992055713}
-  meetMeWindow: {fileID: 1437411880}
-  playButton: {fileID: 962471034}
-  settingsButton: {fileID: 2046358729}
-  returnToGameButton: {fileID: 1067996440}
-  pauseButton: {fileID: 1086479430}
-  rewardsButtons: {fileID: 698941302}
-  meetMeButton: {fileID: 1035769392}
-  themesButton: {fileID: 510591127}
-  currentLevelText: {fileID: 0}
-  endGameContainer: {fileID: 1964720482}
-  nextLevelButton: {fileID: 771172656}
-  backToMenuButton: {fileID: 330301836}
+  m_EditorClassIdentifier: Main::Gameplay.UI.GameUIPresenter
+  view: {fileID: 1612463404}
   availableThemes:
-  - {fileID: 11400000, guid: 1d300d8a42fcaac42ba215a1f3ee68cb, type: 2}
-  moveOffset: 500
-  animDuration: 0.5
-  moveInEase: 1
-  moveOutEase: 1
+  - {fileID: 11400000, guid: 978b82ae27627a14bbd482047f3f19bf, type: 2}
 --- !u!1001 &276917008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4622,13 +4600,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1154457598}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1612463400}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1803751822}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1162330143
 PrefabInstance:
@@ -5448,7 +5426,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start
+  m_text: Start Level 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6145,6 +6123,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1612463400}
+  - component: {fileID: 1612463404}
   - component: {fileID: 1612463403}
   - component: {fileID: 1612463402}
   - component: {fileID: 1612463401}
@@ -6242,6 +6221,40 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1612463404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612463399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed5d338efecd94141812fcec68b78b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::Gameplay.UI.GameUIView
+  overlayUICanvas: {fileID: 1612463403}
+  background: {fileID: 1874160964}
+  canvasGroup: {fileID: 1874160966}
+  topSideGroup: {fileID: 845844196}
+  rightSideGroup: {fileID: 1190738921}
+  bottomSideGroup: {fileID: 383182776}
+  themesWindow: {fileID: 992055713}
+  meetMeWindow: {fileID: 1437411880}
+  PlayButton: {fileID: 962471034}
+  SettingsButton: {fileID: 2046358729}
+  ReturnToGameButton: {fileID: 1067996440}
+  PauseButton: {fileID: 1086479430}
+  RewardsButtons: {fileID: 0}
+  MeetMeButton: {fileID: 1035769392}
+  ThemesButton: {fileID: 510591127}
+  NextLevelButton: {fileID: 771172656}
+  BackToMenuButton: {fileID: 330301836}
+  endGameContainer: {fileID: 1964720481}
+  moveOffset: 500
+  animDuration: 0.5
+  moveInEase: 1
+  moveOutEase: 1
 --- !u!1 &1628438746
 GameObject:
   m_ObjectHideFlags: 0
@@ -6544,6 +6557,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1277034920}
+  - {fileID: 1154457599}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1804325219 stripped
@@ -8220,5 +8234,4 @@ SceneRoots:
   - {fileID: 1628438747}
   - {fileID: 2044820056}
   - {fileID: 1803751822}
-  - {fileID: 1154457599}
   - {fileID: 199036518}
