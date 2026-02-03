@@ -4220,7 +4220,7 @@ Transform:
   m_GameObject: {fileID: 1277034919}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.28, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4613,6 +4613,7 @@ MonoBehaviour:
   CameraController: {fileID: 1749126705}
   CellSize: 2.56
   GridOrigin: {fileID: 1448806253}
+  PiecesContainerOffset: {x: -1.2, y: 0, z: 0}
   InitialPoolSize: 50
   NodePrefab: {fileID: 2915971359565890404, guid: b9d294dc398987444b776c7ebe3ab5cc, type: 3}
   PiecesContainer: {fileID: 1277034920}

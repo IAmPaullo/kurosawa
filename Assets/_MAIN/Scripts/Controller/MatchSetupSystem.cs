@@ -38,6 +38,8 @@ namespace Gameplay.Managers
         private EventBinding<RequestNextLevelEvent> nextLevelBind;
         private EventBinding<RequestRestartEvent> restartBind;
 
+        private EventBinding<RequestMatchStartEvent> startRequestBind; //startMatchRequestBind
+
         private void Start()
         {
             if (SaveManager == null)
@@ -63,18 +65,22 @@ namespace Gameplay.Managers
 
                 SaveManager.LevelLoadOverride = -1;
 
-                InitializeMatchRoutine(levelToLoad).Forget();
+                InitializeMatchRoutine(levelToLoad, waitForInput: true).Forget();
             }
         }
 
         private void OnEnable()
         {
+
+            startRequestBind = new(OnRequestMatchStart);
             pauseRequestBind = new(OnPauseRequest);
             resumeRequestBind = new(OnResumeRequest);
             levelCompletedBind = new(OnLevelCompleted);
             nextLevelBind = new(OnRequestNextLevel);
             restartBind = new(OnRequestRestart);
 
+
+            EventBus<RequestMatchStartEvent>.Register(startRequestBind);
             EventBus<RequestPauseEvent>.Register(pauseRequestBind);
             EventBus<LevelCompletedEvent>.Register(levelCompletedBind);
             EventBus<RequestNextLevelEvent>.Register(nextLevelBind);
@@ -84,6 +90,7 @@ namespace Gameplay.Managers
 
         private void OnDisable()
         {
+            EventBus<RequestMatchStartEvent>.Deregister(startRequestBind);
             EventBus<RequestPauseEvent>.Deregister(pauseRequestBind);
             EventBus<RequestResumeEvent>.Deregister(resumeRequestBind);
             EventBus<LevelCompletedEvent>.Deregister(levelCompletedBind);
@@ -98,7 +105,7 @@ namespace Gameplay.Managers
                 InitializeMatchRoutine(currentSessionLevelIndex).Forget();
         }
 #endif
-        private async UniTaskVoid InitializeMatchRoutine(int levelIndex)
+        private async UniTaskVoid InitializeMatchRoutine(int levelIndex, bool waitForInput = false)
         {
 
             if (Campaign == null) return;
@@ -127,15 +134,27 @@ namespace Gameplay.Managers
             Debug.Log($"Preparing Level {levelIndex}");
             EventBus<MatchPrepareEvent>.Raise(new MatchPrepareEvent { LevelData = data });
 
-            await UniTask.Delay(200);
-
+            if (waitForInput)
+            {
+                Debug.Log("Waiting for Play input...");
+            }
+            else
+            {
+                await UniTask.Delay(200);
+                StartMatchLogic();
+            }
+        }
+        private void StartMatchLogic()
+        {
             levelStartTime = Time.time;
-
-            Debug.Log("MatchStartEvent Raised. Starting...");
+            Debug.Log("MatchStartEvent raised. starting...");
             EventBus<MatchStartEvent>.Raise(new MatchStartEvent());
         }
-
-        private void OnPauseRequest(RequestPauseEvent evt)
+        private void OnRequestMatchStart(RequestMatchStartEvent _)
+        {
+            StartMatchLogic();
+        }
+        private void OnPauseRequest(RequestPauseEvent _)
         {
             if (IsPaused) return;
             IsPaused = true;
@@ -148,7 +167,7 @@ namespace Gameplay.Managers
 
             Debug.Log("Game Paused");
         }
-        private void OnResumeRequest(RequestResumeEvent evt)
+        private void OnResumeRequest(RequestResumeEvent _)
         {
             if (!IsPaused) return;
             IsPaused = false;
@@ -163,7 +182,7 @@ namespace Gameplay.Managers
 
             Debug.Log("Game Resumed");
         }
-        private void OnLevelCompleted(LevelCompletedEvent evt)
+        private void OnLevelCompleted(LevelCompletedEvent _)
         {
             Debug.Log($" Level {currentSessionLevelIndex} Complete. Saving progress");
 
@@ -175,7 +194,6 @@ namespace Gameplay.Managers
             SaveManager.RegisterLevelGrade(currentSessionLevelIndex, grade);
             EventBus<MatchEndEvent>.Raise(new MatchEndEvent());
         }
-
         private string CalculatePlayerGrade()
         {
             LevelDataSO data = Campaign.GetLevel(currentSessionLevelIndex);
@@ -184,15 +202,16 @@ namespace Gameplay.Managers
             return grade;
         }
 
-        private void OnRequestNextLevel(RequestNextLevelEvent evt)
+        private void OnRequestNextLevel(RequestNextLevelEvent _)
         {
             int nextIndex = currentSessionLevelIndex + 1;
-            InitializeMatchRoutine(nextIndex).Forget();
+            SceneEvents.Instance.TriggerChangeSceneAsync("Game");
+            //InitializeMatchRoutine(nextIndex).Forget();
         }
 
-        private void OnRequestRestart(RequestRestartEvent evt)
+        private void OnRequestRestart(RequestRestartEvent _)
         {
-            InitializeMatchRoutine(currentSessionLevelIndex).Forget();
+            InitializeMatchRoutine(currentSessionLevelIndex, waitForInput: true).Forget();
         }
     }
 }

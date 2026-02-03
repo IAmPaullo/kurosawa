@@ -31,8 +31,8 @@ namespace Gameplay.Views
 
         private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
-        private static readonly int TopColorId = Shader.PropertyToID("_TopColor");
-        private static readonly int BottomColorId = Shader.PropertyToID("_BottomColor");
+        private static readonly int TopColorId = Shader.PropertyToID("_Top_Color");
+        private static readonly int BottomColorId = Shader.PropertyToID("_Bottom_Color");
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");

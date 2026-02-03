@@ -23,6 +23,8 @@ public class GameUIController : MonoBehaviour
     private Transform bottomSideGroup;
 
     [SerializeField, TabGroup("Buttons")]
+    private Button playButton;
+    [SerializeField, TabGroup("Buttons")]
     private Button settingsButton;
     [SerializeField, TabGroup("Buttons")]
     private Button returnToGameButton;
@@ -33,6 +35,13 @@ public class GameUIController : MonoBehaviour
 
     [SerializeField, TabGroup("Labels")]
     private TextMeshProUGUI currentLevelText;
+
+    [SerializeField, BoxGroup("End Game Panel")]
+    private Transform endGameContainer;
+    [SerializeField, BoxGroup("End Game Panel")]
+    private Button nextLevelButton;
+    [SerializeField, BoxGroup("End Game Panel")]
+    private Button backToMenuButton;
 
 
     [SerializeField, TabGroup("Player Progress UI")]
@@ -61,6 +70,7 @@ public class GameUIController : MonoBehaviour
     [SerializeField, BoxGroup("Animation")]
     private Ease windowFadeOutEase = Ease.InBack;
 
+    private EventBinding<MatchStartEvent> matchStartBind;
     private EventBinding<RequestPauseEvent> pauseRequestBind;
     private EventBinding<MatchEndEvent> matchEndBind;
 
@@ -69,12 +79,20 @@ public class GameUIController : MonoBehaviour
     private Vector2 rightTargetPos;
     private Vector2 bottomTargetPos;
     private Sequence uiSequence;
+    private GameObject playButtonObj;
+    private GameObject returnToGameButtonObj;
+    private GameObject endGameContainerObj;
 
     private void Awake()
     {
         canvasTransform = overlayUICanvas.transform;
+        returnToGameButtonObj = returnToGameButton.gameObject;
+        endGameContainerObj = endGameContainer.gameObject;
+        playButtonObj = playButton.gameObject;
         SetupButtons();
 
+        if (playButtonObj != null)
+            playButtonObj.SetActive(true);
 
         topTargetPos = GetAnchoredPos(topSideGroup);
         rightTargetPos = GetAnchoredPos(rightSideGroup);
@@ -89,15 +107,18 @@ public class GameUIController : MonoBehaviour
     {
         pauseRequestBind = new(OnPauseRequest);
         matchEndBind = new(OnMatchEnd);
+        matchStartBind = new(OnMatchStart);
 
         EventBus<RequestPauseEvent>.Register(pauseRequestBind);
         EventBus<MatchEndEvent>.Register(matchEndBind);
+        EventBus<MatchStartEvent>.Register(matchStartBind);
     }
 
     private void OnDisable()
     {
         EventBus<RequestPauseEvent>.Deregister(pauseRequestBind);
         EventBus<MatchEndEvent>.Deregister(matchEndBind);
+        EventBus<MatchStartEvent>.Deregister(matchStartBind);
     }
 
     public void SetupButtons()
@@ -106,14 +127,43 @@ public class GameUIController : MonoBehaviour
         {
             EventBus<RequestResumeEvent>.Raise(new());
             AnimateOut();
-
         });
         pauseButton.onClick.AddListener(() => EventBus<RequestPauseEvent>.Raise(new()));
 
-    }
 
-    private void OnPauseRequest(RequestPauseEvent evt)
+        if (nextLevelButton)
+            nextLevelButton.onClick.AddListener(() => EventBus<RequestNextLevelEvent>.Raise(new()));
+
+        if (backToMenuButton)
+        {
+            backToMenuButton.onClick.AddListener(() =>
+            {
+                if (SceneEvents.Instance != null)
+                    SceneEvents.Instance.LoadMainMenuAsync();
+            });
+        }
+        if (playButton)
+        {
+            playButton.onClick.AddListener(() =>
+            {
+                EventBus<RequestMatchStartEvent>.Raise(new());
+                playButtonObj.SetActive(false);
+            });
+        }
+    }
+    private void OnMatchStart(MatchStartEvent _)
     {
+        if (playButtonObj != null)
+            playButtonObj.SetActive(false);
+    }
+    private void OnPauseRequest(RequestPauseEvent _)
+    {
+        if (returnToGameButtonObj)
+            returnToGameButtonObj.SetActive(true);
+
+        if (endGameContainerObj)
+            endGameContainerObj.SetActive(false);
+
         AnimateIn();
 
         if (availableThemes != null && availableThemes.Count > 0)
@@ -122,9 +172,15 @@ public class GameUIController : MonoBehaviour
         }
     }
 
-    private void OnMatchEnd(MatchEndEvent evt)
+    private void OnMatchEnd(MatchEndEvent _)
     {
-        AnimateOut();
+        if (returnToGameButtonObj)
+            returnToGameButtonObj.SetActive(false);
+
+        if (endGameContainerObj)
+            endGameContainerObj.SetActive(true);
+
+        AnimateIn();
     }
     [Button]
     private void ApplyTheme(GradientSO theme)

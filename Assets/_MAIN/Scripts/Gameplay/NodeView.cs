@@ -22,8 +22,8 @@ namespace Gameplay.Views
 
         private EventBinding<ThemeUpdateEvent> themeUpdateBind;
         private MaterialPropertyBlock mainMpb;
-        private static readonly int TopColorId = Shader.PropertyToID("_TopColor");
-        private static readonly int BottomColorId = Shader.PropertyToID("_BottomColor");
+        private static readonly int TopColorId = Shader.PropertyToID("_Top_Color");
+        private static readonly int BottomColorId = Shader.PropertyToID("_Bottom_Color");
 
         public void Setup(int x, int y, Mesh mainMesh, Mesh glowMesh)
         {
@@ -101,9 +101,9 @@ namespace Gameplay.Views
         {
             GradientSO theme = evt.Theme;
 
-            Color topColor = theme.MainGradient.Evaluate(0);
-            Color bottomColor = theme.MainGradient.Evaluate(1);
-            Color glowColor = Color.white;
+            Color topColor = theme.TopColor;
+            Color bottomColor = theme.BottomColor;
+            Color glowColor = theme.GlowColor;
 
             UpdateTheme(topColor, bottomColor);
             pieceView.UpdateTheme(topColor, bottomColor, glowColor);
