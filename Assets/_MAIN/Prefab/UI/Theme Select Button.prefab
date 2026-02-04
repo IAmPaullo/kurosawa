@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7615237224897162377}
   - component: {fileID: 2265574216359289886}
   - component: {fileID: 1575984146349806829}
+  - component: {fileID: 2196836330273838728}
   m_Layer: 0
   m_Name: Theme Select Button
   m_TagString: Untagged
@@ -136,3 +137,17 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2196836330273838728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060672539403757298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bada92e3010d9b418309605118f01bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::Gameplay.Audio.PlaySoundOnClick
+  soundType: 0
+  button: {fileID: 2265574216359289886}
