@@ -1,4 +1,4 @@
 namespace Gameplay.Boot.Events
 {
-    public struct BootSetupEvent : IEvent { }
+    public struct MainMenuStartEvent : IEvent { }
 }

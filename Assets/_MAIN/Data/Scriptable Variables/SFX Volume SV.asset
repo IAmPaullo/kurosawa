@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e9d8137197c8f849a44654c30418759, type: 3}
-  m_Name: Music Volume SV
+  m_Name: SFX Volume SV
   m_EditorClassIdentifier: Main::FloatVariable
   serializationData:
     SerializedFormat: 2
@@ -21,4 +21,4 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  Value: 0.1
+  Value: 1.96

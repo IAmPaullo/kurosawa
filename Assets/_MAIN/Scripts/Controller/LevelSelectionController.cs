@@ -27,7 +27,7 @@ namespace Gameplay.UI
 
         private List<LevelButton_UI> buttonPool = new();
 
-        private EventBinding<BootSetupEvent> setupMenuBinding;
+        private EventBinding<MainMenuStartEvent> setupMenuBinding;
 
         private void Awake()
         {
@@ -36,13 +36,13 @@ namespace Gameplay.UI
         private void OnEnable()
         {
             setupMenuBinding = new(OnSetupEvent);
-            EventBus<BootSetupEvent>.Register(setupMenuBinding);
+            EventBus<MainMenuStartEvent>.Register(setupMenuBinding);
         }
         private void OnDestroy()
         {
-            EventBus<BootSetupEvent>.Deregister(setupMenuBinding);
+            EventBus<MainMenuStartEvent>.Deregister(setupMenuBinding);
         }
-        private void OnSetupEvent(BootSetupEvent _)
+        private void OnSetupEvent(MainMenuStartEvent _)
         {
             if (saveManager == null) saveManager = FindFirstObjectByType<SaveManager>();
             scrollRect.onValueChanged.AddListener((_) => NormalizeScrollRectPosition());

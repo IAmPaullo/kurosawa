@@ -48,14 +48,14 @@ namespace Gameplay.Settings
         private bool IsActive;
         private bool IsUpdatingView;
 
-        private EventBinding<BootSetupEvent> bootSetupEventBind;
+        private EventBinding<MainMenuStartEvent> bootSetupEventBind;
         private EventBinding<MatchPrepareEvent> matchPrepareBind;
 
         private void OnEnable()
         {
             bootSetupEventBind = new(OnBootSetup);
             matchPrepareBind = new(OnMatchPrepare);
-            EventBus<BootSetupEvent>.Register(bootSetupEventBind);
+            EventBus<MainMenuStartEvent>.Register(bootSetupEventBind);
             EventBus<MatchPrepareEvent>.Register(matchPrepareBind);
         }
 
@@ -65,7 +65,7 @@ namespace Gameplay.Settings
             Activate();
         }
 
-        private void OnBootSetup(BootSetupEvent _)
+        private void OnBootSetup(MainMenuStartEvent _)
         {
             Initialize(SettingsScreenMode.Menu);
             Activate();
@@ -76,7 +76,7 @@ namespace Gameplay.Settings
         }
         private void OnDestroy()
         {
-            EventBus<BootSetupEvent>.Deregister(bootSetupEventBind);
+            EventBus<MainMenuStartEvent>.Deregister(bootSetupEventBind);
             EventBus<MatchPrepareEvent>.Deregister(matchPrepareBind);
         }
         public void Initialize(SettingsScreenMode screenMode)

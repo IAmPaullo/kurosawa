@@ -32,7 +32,7 @@ public class MainMenuController : MonoBehaviour
 
     private void Start()
     {
-        EventBus<BootSetupEvent>.Raise(new() { });
+        EventBus<MainMenuStartEvent>.Raise(new() { });
         if (saveManager == null)
             saveManager = FindFirstObjectByType<SaveManager>();
 
