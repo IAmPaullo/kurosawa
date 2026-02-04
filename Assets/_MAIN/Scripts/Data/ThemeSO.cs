@@ -2,14 +2,28 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New UI Theme", menuName = "UI/Theme Data")]
-public class GradientSO : ScriptableObject
+public class ThemeSO : ScriptableObject
 {
-    [Title("Colors")]
+    [ShowInInspector, ReadOnly]
+    public string uniqueID = System.Guid.NewGuid().ToString();
+    [BoxGroup("Main Colors")]
     public Gradient MainGradient;
+    [BoxGroup("Main Colors")]
     public Color TextColor = Color.white;
+    [BoxGroup("Main Colors")]
     public Color ButtonColor = Color.white;
+    [BoxGroup("Main Colors")]
     [ColorUsage(true, true)]
     public Color GlowColor = Color.white;
+
+    [ColorUsage(true, true), BoxGroup("Skybox Colors")]
+    public Color SkyTopColor = Color.white;
+    [ColorUsage(true, true), BoxGroup("Skybox Colors")]
+    public Color SkyBottomColor = Color.white;
+
+
+    [ColorUsage(true, true), BoxGroup("Fog Colors")]
+    public Color FakeFogColor = Color.white;
 
 
     [ShowInInspector, ReadOnly, BoxGroup("Gradient Preview")]
@@ -23,6 +37,7 @@ public class GradientSO : ScriptableObject
 
     [Title("Settings")]
     public bool UseDarkText = false;
+
 
 
     Color GetTopColor()

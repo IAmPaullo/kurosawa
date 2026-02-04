@@ -18,8 +18,8 @@ namespace Gameplay.UI
 
         [SerializeField, Required] private GameUIView view;
 
-        [SerializeField] private List<GradientSO> availableThemes;
-        public GradientSO CurrentTheme { get; private set; }
+        [SerializeField] private List<ThemeSO> availableThemes;
+        public ThemeSO CurrentTheme { get; private set; }
 
         private EventBinding<MatchStartEvent> matchStartBind;
         private EventBinding<RequestPauseEvent> pauseRequestBind;
@@ -128,11 +128,6 @@ namespace Gameplay.UI
             SetState(UIState.Ended, true);
         }
 
-        public void ApplyTheme(GradientSO theme)
-        {
-            CurrentTheme = theme;
-            EventBus<ThemeUpdateEvent>.Raise(new ThemeUpdateEvent { Theme = CurrentTheme });
-        }
 
         private void SetState(UIState state, bool animate)
         {

@@ -78,7 +78,7 @@ namespace Gameplay.UI
             if (ReturnToGameButtonObj) ReturnToGameButtonObj.SetActive(showResume);
             if (EndGameContainerObj) EndGameContainerObj.SetActive(showEndGame);
 
-            // Logica original: Se não estiver pausado, fecha janelas
+
             if (state != GameUIPresenter.UIState.Paused)
             {
                 CloseAllWindows();
@@ -89,7 +89,7 @@ namespace Gameplay.UI
                 if (state == GameUIPresenter.UIState.Playing || state == GameUIPresenter.UIState.PreMatch)
                     AnimateOut();
                 else
-                    AnimateIn(); // Paused ou Ended anima o menu de volta
+                    AnimateIn(); 
             }
             else
             {
@@ -109,7 +109,7 @@ namespace Gameplay.UI
             meetMeWindow?.Close();
         }
 
-        // --- Animation Logic (Mantida Original) ---
+
 
         private void AnimateIn()
         {
@@ -119,7 +119,7 @@ namespace Gameplay.UI
 
             uiSequence.Append(background.DOFade(.25f, .25f));
             uiSequence.Append(MoveContainer(topSideGroup, topTargetPos, animDuration, moveInEase));
-            uiSequence.Join(MoveContainer(rightSideGroup, rightTargetPos, animDuration, moveInEase)); // Usei Join pra ficar simultaneo como esperado, mas ajustei pro original se necessario
+            uiSequence.Join(MoveContainer(rightSideGroup, rightTargetPos, animDuration, moveInEase)); 
             uiSequence.Join(MoveContainer(bottomSideGroup, bottomTargetPos, animDuration, moveInEase));
         }
 

@@ -98,7 +98,8 @@ namespace Gameplay.Views
 
         private void OnThemeUpdate(ThemeUpdateEvent evt)
         {
-            GradientSO theme = evt.Theme;
+            ThemeSO theme = evt.Theme;
+
 
             Color topColor = theme.TopColor;
             Color bottomColor = theme.BottomColor;

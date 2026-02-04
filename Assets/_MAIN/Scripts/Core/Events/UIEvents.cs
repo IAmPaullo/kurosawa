@@ -9,6 +9,7 @@ namespace Gameplay.Core.Events
 
     public struct ThemeUpdateEvent : IEvent
     {
-        public GradientSO Theme;
+        public ThemeSO Theme;
     }
+    public struct RequestThemeEvent : IEvent { }
 }

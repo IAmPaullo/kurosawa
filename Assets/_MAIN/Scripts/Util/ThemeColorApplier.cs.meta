@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 73d0d754a25464e41893c1d8d8e75cb0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - runtime: {fileID: 11400000, guid: f507fc933bb35d1429c461b5e4be0e7f, type: 2}
+  - image: {instanceID: 0}
+  - spriteRenderer: {instanceID: 0}
+  - textMeshProUGUI: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

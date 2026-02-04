@@ -12,7 +12,7 @@ public class ThemeColorApplier : MonoBehaviour
         ButtonColor,
         GradientSample
     }
-
+    [SerializeField, Required] private ThemeRuntimeSO runtime;
     [Title("Target")]
     [SerializeField] private Image image;
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -42,22 +42,28 @@ public class ThemeColorApplier : MonoBehaviour
         if (image == null) TryGetComponent(out image);
         if (spriteRenderer == null) TryGetComponent(out spriteRenderer);
         if (textMeshProUGUI == null) TryGetComponent(out textMeshProUGUI);
-    }
-    private void OnEnable()
-    {
+
         themeUpdateBinding = new(OnThemeUpdate);
+    }
+
+    void OnEnable()
+    {
         EventBus<ThemeUpdateEvent>.Register(themeUpdateBinding);
+
+        if (runtime != null && runtime.CurrentTheme != null)
+            ApplyTheme(runtime.CurrentTheme);
     }
     private void OnDestroy()
     {
         EventBus<ThemeUpdateEvent>.Deregister(themeUpdateBinding);
     }
+
     public void OnThemeUpdate(ThemeUpdateEvent evt)
     {
         ApplyTheme(evt.Theme);
     }
 
-    public void ApplyTheme(GradientSO theme)
+    public void ApplyTheme(ThemeSO theme)
     {
         if (theme == null) return;
 
@@ -84,7 +90,7 @@ public class ThemeColorApplier : MonoBehaviour
         }
     }
 
-    Color ResolveColor(GradientSO theme)
+    Color ResolveColor(ThemeSO theme)
     {
         switch (colorSource)
         {

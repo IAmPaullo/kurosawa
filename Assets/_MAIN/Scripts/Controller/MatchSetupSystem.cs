@@ -14,6 +14,7 @@ namespace Gameplay.Managers
         [BoxGroup("Dependencies")]
         [SerializeField] private SaveManager SaveManager;
         [SerializeField] private CameraController CameraController;
+        [SerializeField] private ThemeController ThemeController;
 
         [BoxGroup("Debug Config")]
         [SerializeField] private LevelDataSO DebugLevel;
@@ -39,35 +40,6 @@ namespace Gameplay.Managers
         private EventBinding<RequestRestartEvent> restartBind;
 
         private EventBinding<RequestMatchStartEvent> startRequestBind; //startMatchRequestBind
-
-        private void Start()
-        {
-            if (SaveManager == null)
-            {
-                Debug.LogError("SaveManager missing");
-                return;
-            }
-
-            if (AutoStart)
-            {
-                int levelToLoad;
-
-                if (SaveManager.LevelLoadOverride != -1)
-                {
-                    levelToLoad = SaveManager.LevelLoadOverride;
-                    Debug.Log($"Loading Selected level: {levelToLoad}");
-                }
-                else
-                {
-                    levelToLoad = SaveManager.GetNextLevelIndex();
-                    Debug.Log($"loading progress level: {levelToLoad}");
-                }
-
-                SaveManager.LevelLoadOverride = -1;
-
-                InitializeMatchRoutine(levelToLoad, waitForInput: true).Forget();
-            }
-        }
 
         private void OnEnable()
         {
@@ -97,6 +69,40 @@ namespace Gameplay.Managers
             EventBus<RequestNextLevelEvent>.Deregister(nextLevelBind);
             EventBus<RequestRestartEvent>.Deregister(restartBind);
         }
+        private void Start()
+        {
+            if (SaveManager == null)
+            {
+                Debug.LogError("SaveManager missing");
+                return;
+            }
+
+            if (ThemeController != null)
+            {
+                ThemeController.Setup();
+            }
+
+            if (AutoStart)
+            {
+                int levelToLoad;
+
+                if (SaveManager.LevelLoadOverride != -1)
+                {
+                    levelToLoad = SaveManager.LevelLoadOverride;
+                    Debug.Log($"Loading Selected level: {levelToLoad}");
+                }
+                else
+                {
+                    levelToLoad = SaveManager.GetNextLevelIndex();
+                    Debug.Log($"loading progress level: {levelToLoad}");
+                }
+
+                SaveManager.LevelLoadOverride = -1;
+
+                InitializeMatchRoutine(levelToLoad, waitForInput: true).Forget();
+            }
+        }
+
 #if UNITY_EDITOR
         [Button("Force Start Match")]
         public void ForceStart()

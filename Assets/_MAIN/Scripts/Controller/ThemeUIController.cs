@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class ThemeUIController : MonoBehaviour
 {
     [BoxGroup("References")]
+    [SerializeField] private ThemeController themeManager;
+
+    [BoxGroup("References")]
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField, Required] private Transform contentContainer;
 
@@ -14,7 +17,7 @@ public class ThemeUIController : MonoBehaviour
     [SerializeField, Required] private ThemeButton_UI themeButtonPrefab;
 
     [SerializeField] private int maxThemes = 20;
-    [SerializeField] private GradientLibrarySO themeLibrary;
+    [SerializeField] private ThemeLibrarySO themeLibrary;
 
     private List<ThemeButton_UI> buttonPool = new();
     private EventBinding<MatchPrepareEvent> prepareMatchBinding;
@@ -36,11 +39,11 @@ public class ThemeUIController : MonoBehaviour
 
     private void OnPrepareMatch(MatchPrepareEvent _)
     {
-        //scrollRect.onValueChanged.AddListener((_) => NormalizeScrollRectPosition());
-        RefreshLevelList();
+        RefreshThemesList();
+        NormalizeScrollRectPosition();
     }
     [Button("Force Refresh")]
-    public void RefreshLevelList()
+    public void RefreshThemesList()
     {
         if (themeLibrary == null) return;
 
@@ -61,12 +64,12 @@ public class ThemeUIController : MonoBehaviour
                 buttonView.gameObject.SetActive(true);
 
                 int levelIndex = i;
-                GradientSO theme = themeLibrary.Entries[levelIndex];
+                ThemeSO theme = themeLibrary.Entries[levelIndex];
                 Gradient gradient = theme.MainGradient;
 
                 buttonView.Setup(
                     gradient,
-                    () => EventBus<ThemeUpdateEvent>.Raise(new() { Theme = theme })
+                    () => themeManager.SelectTheme(theme)
                 );
             }
             else
@@ -90,5 +93,9 @@ public class ThemeUIController : MonoBehaviour
                 buttonPool.Add(newBtn);
             }
         }
+    }
+    private void NormalizeScrollRectPosition()
+    {
+        scrollRect.verticalNormalizedPosition = 1f;
     }
 }

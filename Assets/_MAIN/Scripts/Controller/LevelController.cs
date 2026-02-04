@@ -115,10 +115,9 @@ namespace Gameplay.Core.Controllers
 
             ResetLevelState();
 
-            // Mantém sua intenção original: grid visual é baseado no VisualGridSize
             int maxGridSize = CurrentLevelData.VisualGridSize;
 
-            // ADICIONADO: garante que cabe e centraliza o level dentro desse grid visual
+
             currentVisualGridSize = Mathf.Max(maxGridSize, CurrentLevelData.Width, CurrentLevelData.Height);
 
             levelStartX = Mathf.Max(0, (currentVisualGridSize - CurrentLevelData.Width) / 2);
@@ -131,7 +130,6 @@ namespace Gameplay.Core.Controllers
 
             if (CameraController != null)
             {
-                // Mantém sua lógica: no prepare, enquadra o grid visual inteiro
                 CameraController.Setup(currentVisualGridSize, CellSize, GridOrigin.position);
             }
         }
@@ -220,6 +218,7 @@ namespace Gameplay.Core.Controllers
                         SetupDummyNode(ViewInstance);
                     }
                 }
+                EventBus<RequestThemeEvent>.Raise(new() { });
             }
         }
 
