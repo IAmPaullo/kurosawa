@@ -1,4 +1,5 @@
 using Gameplay.Core.Controllers;
+using Gameplay.Core.Events;
 using Gameplay.Views;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace Gameplay.Core.Controllers
 
         private InputAction PressAction;
         private InputAction PositionAction;
+        [ShowInInspector] private bool inputEnabled = true;
 
         private void Awake()
         {
@@ -42,6 +44,10 @@ namespace Gameplay.Core.Controllers
             PressAction.performed += OnInputPerformed;
             PressAction.Enable();
             PositionAction.Enable();
+            pauseRequestBind = new(OnPauseRequest);
+            resumeRequestBind = new(OnResumeRequest);
+            EventBus<RequestPauseEvent>.Register(pauseRequestBind);
+            EventBus<RequestResumeEvent>.Register(resumeRequestBind);
         }
 
         private void OnDisable()
@@ -49,11 +55,14 @@ namespace Gameplay.Core.Controllers
             PressAction.performed -= OnInputPerformed;
             PressAction.Disable();
             PositionAction.Disable();
+            EventBus<RequestPauseEvent>.Deregister(pauseRequestBind);
+            EventBus<RequestResumeEvent>.Deregister(resumeRequestBind);
         }
 
 
         private void OnInputPerformed(InputAction.CallbackContext _)
         {
+            if (!inputEnabled) return;
             if (Time.time < lastInteractionTime + interactionCooldown) return;
             Vector2 ScreenPosition = MouseUtil.GetMousePosition();
             PerformRaycast(ScreenPosition);
@@ -72,6 +81,17 @@ namespace Gameplay.Core.Controllers
                     LevelController.OnNodeInteraction(Node.XPosition, Node.YPosition);
                 }
             }
+        }
+
+        private EventBinding<RequestPauseEvent> pauseRequestBind;
+        private EventBinding<RequestResumeEvent> resumeRequestBind;
+        private void OnPauseRequest(RequestPauseEvent _)
+        {
+            inputEnabled = false;
+        }
+        private void OnResumeRequest(RequestResumeEvent _)
+        {
+            inputEnabled = true;
         }
     }
 }
