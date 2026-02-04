@@ -49,7 +49,9 @@ namespace Gameplay.Audio
             }
             if (sfxCache.TryGetValue(type, out List<AudioClip> clips))
             {
-                return clips[Random.Range(0, clips.Count)];
+                int index = Random.Range(0, clips.Count);
+                AudioClip clip = clips[index];
+                return clip;
             }
             return null;
         }

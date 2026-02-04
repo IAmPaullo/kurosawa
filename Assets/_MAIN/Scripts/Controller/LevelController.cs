@@ -299,9 +299,18 @@ namespace Gameplay.Core.Controllers
             if (GridModel == null || !IsInsideLevelBounds(x, y) || GridModel[x, y] == null) return;
 
             GridModel[x, y].Rotate();
+
+            RequestNodeSoundEffect(Gameplay.Audio.SFXType.Node_Rotate);
+
             RecalculateFlow();
             UpdateAllViews();
             CheckWinCondition();
+        }
+
+        private static void RequestNodeSoundEffect(Gameplay.Audio.SFXType type)
+        {
+            if (Gameplay.Audio.AudioManager.Instance != null)
+                Gameplay.Audio.AudioManager.Instance.PlaySFX(type, 0.15f);
         }
 
         private void RecalculateFlow()
@@ -357,6 +366,7 @@ namespace Gameplay.Core.Controllers
 
                 if ((Neighbor.GetCurrentConnections() & inDir) != 0)
                 {
+                    RequestNodeSoundEffect(Gameplay.Audio.SFXType.Node_Connect);
                     Neighbor.IsPowered = true;
                     queue.Enqueue(Neighbor);
                 }

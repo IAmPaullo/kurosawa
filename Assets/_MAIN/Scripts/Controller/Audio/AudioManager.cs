@@ -122,7 +122,7 @@ namespace Gameplay.Audio
             );
         }
 
-        public void PlaySFX(SFXType type, float pitchVar = 0f)
+        public void PlaySFX(SFXType type, float pitchVar = .5f)
         {
             AudioClip clip = audioLibrary.GetSFX(type);
             if (clip == null) return;
