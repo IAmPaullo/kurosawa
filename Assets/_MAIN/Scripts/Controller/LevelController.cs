@@ -268,17 +268,30 @@ namespace Gameplay.Core.Controllers
                 CameraController.FocusOnLevel(CurrentLevelData, CellSize, levelWorldOrigin);
             }
 
-            foreach (NodeView Dummy in DummyViews)
+            float baseGap = 0.015f;
+
+            Sequence scaleSeq = DOTween.Sequence();
+            DummyViews.Shuffle();
+
+            for (int i = 0; i < DummyViews.Count; i++)
             {
-                Dummy.transform.DOScale(Vector3.zero, 0.5f)
-                    .SetEase(Ease.InBack)
-                    .OnComplete(() => Dummy.gameObject.SetActive(false));
+                NodeView dummy = DummyViews[i];
+                float startAt = i * baseGap;
+
+                scaleSeq.Insert(startAt,
+                    //TweenScale.SquashY(dummy.transform, .25f, duration)
+                    //    .SetEase(Ease.InBack)
+                    //    .OnComplete(() => dummy.gameObject.SetActive(false))
+                    dummy.DummyMoveAwayTween()
+                );
             }
 
+            scaleSeq.Play();
             RecalculateFlow();
             UpdateAllViews();
 
             IsInputActive = true;
+
         }
 
         public void OnNodeInteraction(int x, int y)

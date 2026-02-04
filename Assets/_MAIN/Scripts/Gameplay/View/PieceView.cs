@@ -29,13 +29,15 @@ namespace Gameplay.Views
         [Range(0f, 0.5f)]
         [SerializeField] private float pulseDepth = 0.08f;
 
-        private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
         private static readonly int TopColorId = Shader.PropertyToID("_Top_Color");
         private static readonly int BottomColorId = Shader.PropertyToID("_Bottom_Color");
 
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int ColorId = Shader.PropertyToID("_Color");
+
+
+        private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+        private static readonly int EmissionIntensityId = Shader.PropertyToID("_EmissionIntensity");
+        private static readonly int IsEmissiveBoolId = Shader.PropertyToID("_IsEmissive");
 
         private MaterialPropertyBlock glowMpb;
         private MaterialPropertyBlock mainMpb;
@@ -54,6 +56,15 @@ namespace Gameplay.Views
 
             EnsureMpbs();
             KillGlowTween();
+
+            if (glowMeshRenderer)
+            {
+                glowMeshRenderer.GetPropertyBlock(glowMpb);
+                glowMpb.SetFloat(IsEmissiveBoolId, 1f);                 
+                glowMpb.SetColor(EmissionColorId, emissionBaseColor);   
+                glowMeshRenderer.SetPropertyBlock(glowMpb);
+            }
+
             SetGlowIntensity(unpoweredIntensity);
         }
 
@@ -83,20 +94,17 @@ namespace Gameplay.Views
             {
                 glowMeshRenderer.GetPropertyBlock(glowMpb);
 
+                glowMpb.SetColor(TopColorId, topColor);
+                glowMpb.SetColor(BottomColorId, bottomColor);
+
                 emissionBaseColor = glowColor;
 
-                if (glowMeshRenderer.sharedMaterial)
-                {
-                    if (glowMeshRenderer.sharedMaterial.HasProperty(BaseColorId))
-                        glowMpb.SetColor(BaseColorId, glowColor);
-                    else if (glowMeshRenderer.sharedMaterial.HasProperty(ColorId))
-                        glowMpb.SetColor(ColorId, glowColor);
-                }
-
-                var emission = glowColor * currentIntensity;
-                glowMpb.SetColor(EmissionColorId, emission);
+                glowMpb.SetFloat(IsEmissiveBoolId, 1f);
+                glowMpb.SetColor(EmissionColorId, emissionBaseColor); // <-- NOVO (antes tava comentado)
 
                 glowMeshRenderer.SetPropertyBlock(glowMpb);
+
+                ApplyGlowIntensity(currentIntensity); // <-- NOVO: reaplica intensidade depois do theme
             }
         }
 
@@ -155,8 +163,8 @@ namespace Gameplay.Views
 
             glowMeshRenderer.GetPropertyBlock(glowMpb);
 
-            var emission = emissionBaseColor * intensity;
-            glowMpb.SetColor(EmissionColorId, emission);
+            glowMpb.SetFloat(IsEmissiveBoolId, intensity > 0.0001f ? 1f : 0f); // <-- NOVO
+            glowMpb.SetFloat(EmissionIntensityId, intensity);
 
             glowMeshRenderer.SetPropertyBlock(glowMpb);
         }

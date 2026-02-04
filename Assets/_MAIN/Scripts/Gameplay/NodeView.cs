@@ -10,9 +10,8 @@ namespace Gameplay.Views
     public class NodeView : MonoBehaviour
     {
         [SerializeField] private PieceView pieceView;
-        [SerializeField] private Color colorOn = Color.cyan;
-        [SerializeField] private Color colorOff = Color.gray;
         [SerializeField] private Ease rotationEase = Ease.Linear;
+        [SerializeField] private Ease moveAwayEase = Ease.InOutSine;
         [SerializeField] private MeshRenderer meshRenderer;
 
         [ShowInInspector, ReadOnly] public int XPosition { get; private set; }
@@ -120,6 +119,16 @@ namespace Gameplay.Views
                 mainMpb.SetColor(BottomColorId, bottomColor);
                 meshRenderer.SetPropertyBlock(mainMpb);
             }
+        }
+        [Button]
+        public Tween DummyMoveAwayTween()
+        {
+            Tween tween;
+
+            tween = transform.DOMoveY(-50f, .25f)
+                        .SetEase(moveAwayEase)
+                        .OnComplete(() => gameObject.SetActive(false));
+            return tween;
         }
     }
 }
