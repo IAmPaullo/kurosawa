@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
-  m_Name: Theme_Hot-Magenta
+  m_Name: Theme_Cold-Basement
   m_EditorClassIdentifier: Main::GradientSO
   MainGradient:
     serializedVersion: 2
-    key0: {r: 0.07058824, g: 0, b: 0.10980392, a: 1}
-    key1: {r: 0.22745098, g: 0, b: 0.34117648, a: 1}
-    key2: {r: 1, g: 0.16862746, b: 0.8392157, a: 1}
+    key0: {r: 0.019607844, g: 0.023529412, b: 0.039215688, a: 1}
+    key1: {r: 0.0627451, g: 0.07450981, b: 0.10980392, a: 1}
+    key2: {r: 0.16470589, g: 0.18431373, b: 0.22745098, a: 1}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -43,11 +43,11 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 3
   TextColor: {r: 1, g: 1, b: 1, a: 1}
-  ButtonColor: {r: 1, g: 0.16862746, b: 0.8392157, a: 1}
-  GlowColor: {r: 4, g: 0.6745098, b: 3.3568628, a: 4}
-  SkyTopColor: {r: 0.10588235, g: 0, b: 0.16470589, a: 1.5}
-  SkyBottomColor: {r: 1.3636036, g: 0.3036036, b: 1.1586037, a: 1.5}
-  FakeFogColor: {r: 0.21673433, g: 0.03193236, b: 0.30913538, a: 1.25}
+  ButtonColor: {r: 0.16470589, g: 0.18431373, b: 0.22745098, a: 1}
+  GlowColor: {r: 0.65882355, g: 0.7372549, b: 0.9098039, a: 4}
+  SkyTopColor: {r: 0.02647059, g: 0.032941177, b: 0.058823533, a: 1.5}
+  SkyBottomColor: {r: 0.25123343, g: 0.27623343, b: 0.3312334, a: 1.5}
+  FakeFogColor: {r: 0.08359816, g: 0.09315688, b: 0.1218331, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1
   UseDarkText: 0

@@ -7,8 +7,16 @@ using UnityEngine;
 public class GradientSOGeneratorWindow : EditorWindow
 {
     string outputFolder = "Assets/UIThemes/Gradients";
-    bool overwriteExisting = false;
+    bool overwriteExisting  = false;
     bool createSubfoldersByCollection = true;
+
+    [Header("Derived Colors Tuning")]
+    float glowIntensity = 4f;
+    float skyIntensity = 1.5f;
+    float fogIntensity = 1.25f;
+
+    float skySaturationBoost = 1.1f;
+    float fogDesaturate = 0.35f;
 
     [MenuItem("Tools/UI/Generate GradientSO Themes")]
     static void Open() => GetWindow<GradientSOGeneratorWindow>("GradientSO Generator");
@@ -22,6 +30,16 @@ public class GradientSOGeneratorWindow : EditorWindow
         overwriteExisting = EditorGUILayout.Toggle("Overwrite Existing", overwriteExisting);
 
         EditorGUILayout.Space(8);
+        GUILayout.Label("Derived Colors", EditorStyles.boldLabel);
+
+        glowIntensity = EditorGUILayout.Slider("Glow Intensity (HDR)", glowIntensity, 0f, 12f);
+        skyIntensity = EditorGUILayout.Slider("Sky Intensity (HDR)", skyIntensity, 0f, 6f);
+        fogIntensity = EditorGUILayout.Slider("Fog Intensity (HDR)", fogIntensity, 0f, 6f);
+
+        skySaturationBoost = EditorGUILayout.Slider("Sky Saturation Boost", skySaturationBoost, 0.5f, 2.0f);
+        fogDesaturate = EditorGUILayout.Slider("Fog Desaturate", fogDesaturate, 0f, 1f);
+
+        EditorGUILayout.Space(10);
 
         if (GUILayout.Button("Generate / Update"))
             Generate();
@@ -47,7 +65,7 @@ public class GradientSOGeneratorWindow : EditorWindow
             string fileName = $"Theme_{Sanitize(def.name)}.asset";
             string path = $"{folder}/{fileName}";
 
-            var existing = AssetDatabase.LoadAssetAtPath<GradientSO>(path);
+            var existing = AssetDatabase.LoadAssetAtPath<ThemeSO>(path);
 
             if (existing != null && !overwriteExisting)
             {
@@ -55,10 +73,10 @@ public class GradientSOGeneratorWindow : EditorWindow
                 continue;
             }
 
-            GradientSO asset = existing;
+            ThemeSO asset = existing;
             if (asset == null)
             {
-                asset = CreateInstance<GradientSO>();
+                asset = CreateInstance<ThemeSO>();
                 AssetDatabase.CreateAsset(asset, path);
                 created++;
             }
@@ -67,13 +85,33 @@ public class GradientSOGeneratorWindow : EditorWindow
                 updated++;
             }
 
-            asset.MainGradient = CreateGradient(def.hexStops);
+            var gradient = CreateGradient(def.hexStops);
+            asset.MainGradient = gradient;
 
             bool darkText = ShouldUseDarkText(def.hexStops);
             asset.UseDarkText = darkText;
-
             asset.TextColor = darkText ? new Color(0.08f, 0.10f, 0.14f, 1f) : Color.white;
             asset.ButtonColor = PickButtonColor(def.hexStops, darkText);
+
+            Color top = gradient.Evaluate(0f);
+            Color mid = gradient.Evaluate(0.5f);
+            Color bottom = gradient.Evaluate(1f);
+
+            Color accent = ParseHex(def.hexStops[def.hexStops.Length - 1]);
+
+            // Glow (HDR): acento mais forte
+            asset.GlowColor = ToHdr(accent, glowIntensity);
+
+            // Sky (HDR): top mais vibrante, bottom mais suave/escuro
+            Color skyTop = BoostSaturation(top, skySaturationBoost);
+            Color skyBottom = Desaturate(bottom, 0.15f);
+
+            asset.SkyTopColor = ToHdr(skyTop, skyIntensity);
+            asset.SkyBottomColor = ToHdr(skyBottom, skyIntensity);
+
+            // Fog (HDR): baseado no mid, desaturado pra parecer neblina
+            Color fog = Desaturate(mid, fogDesaturate);
+            asset.FakeFogColor = ToHdr(fog, fogIntensity);
 
             EditorUtility.SetDirty(asset);
         }
@@ -123,7 +161,6 @@ public class GradientSOGeneratorWindow : EditorWindow
 
     static Color PickButtonColor(string[] hexStops, bool darkText)
     {
-        // Acento = última cor. Pra synthwave isso funciona muito bem.
         var accent = ParseHex(hexStops[hexStops.Length - 1]);
 
         if (darkText)
@@ -135,6 +172,24 @@ public class GradientSOGeneratorWindow : EditorWindow
         }
 
         return accent;
+    }
+
+    static Color ToHdr(Color c, float intensity)
+    {
+        return c * Mathf.Max(0f, intensity);
+    }
+
+    static Color BoostSaturation(Color c, float multiplier)
+    {
+        Color.RGBToHSV(c, out float h, out float s, out float v);
+        s = Mathf.Clamp01(s * multiplier);
+        return Color.HSVToRGB(h, s, v);
+    }
+
+    static Color Desaturate(Color c, float amount01)
+    {
+        float gray = 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
+        return Color.Lerp(c, new Color(gray, gray, gray, c.a), Mathf.Clamp01(amount01));
     }
 
     static void EnsureFolder(string folder)
@@ -185,39 +240,28 @@ public class GradientSOGeneratorWindow : EditorWindow
     {
         var list = new List<Def>();
 
-        // 15 Relaxing
+        // Relaxing
         list.Add(new Def("Relaxing", "Mist Dawn", "#EAF4FF", "#CFE7F5", "#BFD4E6"));
         list.Add(new Def("Relaxing", "Lavender Calm", "#F2ECFF", "#D7C8FF", "#BBA7F5"));
         list.Add(new Def("Relaxing", "Sage Breeze", "#E9F3EE", "#CBE3D7", "#A9CBBE"));
         list.Add(new Def("Relaxing", "Sea Glass", "#DFF7F5", "#AEE7E3", "#6DCBC7"));
         list.Add(new Def("Relaxing", "Peach Hush", "#FFF1EB", "#FFD7C2", "#F7B79A"));
-        list.Add(new Def("Relaxing", "Sand and Sky", "#F7F1E3", "#D8E7F3", "#A9C8E8"));
-        list.Add(new Def("Relaxing", "Soft Mint", "#ECFFF7", "#BFF2DE", "#7FD9BF"));
-        list.Add(new Def("Relaxing", "Cloudy Blue", "#F3F8FF", "#D8E6FF", "#AFC7F5"));
-        list.Add(new Def("Relaxing", "Rose Water", "#FFF0F4", "#F7C8D6", "#E59CB7"));
-        list.Add(new Def("Relaxing", "Evening Fog", "#EDEFF3", "#C8CEDA", "#9AA4B2"));
-        list.Add(new Def("Relaxing", "Icy Lilac", "#F7F3FF", "#DDD3FF", "#B8A3FF"));
-        list.Add(new Def("Relaxing", "Driftwood", "#F6F2EB", "#D9CBB8", "#B59E82"));
-        list.Add(new Def("Relaxing", "Aqua Whisper", "#E7FEFF", "#B7F3F5", "#7EDFE6"));
-        list.Add(new Def("Relaxing", "Sunset Milk", "#FFF6F0", "#FFD9E2", "#CBB8FF"));
         list.Add(new Def("Relaxing", "Night Spa", "#0B1320", "#1B2E3E", "#2F5D62"));
 
-        // 15 Synthwave (no lugar do Cool)
+        // Synthwave
         list.Add(new Def("Synthwave", "Neon Violet", "#0B0620", "#2A0B5E", "#B517FF"));
         list.Add(new Def("Synthwave", "Hot Magenta", "#12001C", "#3A0057", "#FF2BD6"));
         list.Add(new Def("Synthwave", "Laser Cyan", "#050816", "#0B2C5A", "#00E5FF"));
         list.Add(new Def("Synthwave", "Miami Sunset", "#0B1026", "#7B1FA2", "#FF4D6D"));
-        list.Add(new Def("Synthwave", "Arcade Orange", "#0B0F1A", "#2B1644", "#FF7A00"));
-        list.Add(new Def("Synthwave", "Retro Pink Sky", "#140A2A", "#4B1B73", "#FF77E9"));
-        list.Add(new Def("Synthwave", "Electric Grape", "#0B0614", "#2A0B3D", "#A855F7"));
-        list.Add(new Def("Synthwave", "Purple Heat", "#070A16", "#3B0F3F", "#FF2E63"));
-        list.Add(new Def("Synthwave", "Neon Horizon", "#030712", "#1E1B4B", "#38BDF8"));
-        list.Add(new Def("Synthwave", "VHS Glow", "#0C1020", "#3A155F", "#00F5D4"));
-        list.Add(new Def("Synthwave", "Ultraviolet Wave", "#050816", "#34106B", "#6D28D9"));
-        list.Add(new Def("Synthwave", "Pink and Blue Rush", "#0A0B1E", "#1D4ED8", "#FF3DF2"));
         list.Add(new Def("Synthwave", "Neon Grid", "#060A14", "#0F2A33", "#B7FF00"));
-        list.Add(new Def("Synthwave", "Crimson Synth", "#090A10", "#2A0B3D", "#FF003D"));
-        list.Add(new Def("Synthwave", "Glitch Cyan Purple", "#050816", "#1F1147", "#00D9FF"));
+
+        // New Collections (exemplos)
+        list.Add(new Def("Horror", "Cold Basement", "#05060A", "#10131C", "#2A2F3A"));
+        list.Add(new Def("Horror", "Blood Lamp", "#08060A", "#2A0B12", "#FF003D"));
+        list.Add(new Def("Warm", "Golden Hour", "#FFF3D6", "#FFC98A", "#FF7A00"));
+        list.Add(new Def("Warm", "Terracotta", "#2A0F08", "#8C3B1E", "#F2A65A"));
+        list.Add(new Def("Ocean", "Deep Current", "#020617", "#0B2C5A", "#38BDF8"));
+        list.Add(new Def("Ocean", "Seafoam", "#041B1D", "#0EA5A8", "#A7F3D0"));
 
         return list;
     }

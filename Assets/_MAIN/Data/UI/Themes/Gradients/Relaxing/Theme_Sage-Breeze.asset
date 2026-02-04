@@ -44,4 +44,10 @@ MonoBehaviour:
     m_NumAlphaKeys: 3
   TextColor: {r: 0.08, g: 0.1, b: 0.14, a: 1}
   ButtonColor: {r: 0.6960785, g: 0.79607844, b: 0.75784314, a: 1}
+  GlowColor: {r: 2.6509805, g: 3.1843138, b: 2.9803922, a: 4}
+  SkyTopColor: {r: 1.3647059, g: 1.4294118, b: 1.3970587, a: 1.5}
+  SkyBottomColor: {r: 1.0169115, g: 1.1869115, b: 1.1219115, a: 1.5}
+  FakeFogColor: {r: 1.0260359, g: 1.1025058, b: 1.0642709, a: 1.25}
+  topColorThreshold: 0
+  bottomColorThreshold: 1
   UseDarkText: 1
