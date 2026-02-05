@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Gameplay.Boot.Events;
+using Gameplay.Managers;
 using System.Collections;
 using UnityEngine;
 
@@ -9,14 +10,17 @@ namespace Gameplay.Boot
     public class BootloaderController : MonoBehaviour
     {
         [SerializeField] private int nextSceneIndex = 1;
+        [SerializeField] private SaveManager saveManager;
+        [SerializeField] private AmplitudeBootstrap amplitudeBootstrap;
 
         private IEnumerator Start()
         {
 
             Debug.Log("Initializing Systems");
+            saveManager.Init();
+            amplitudeBootstrap.Init();
 
-
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForEndOfFrame();
 
             Debug.Log("Loading Menu");
 
@@ -29,6 +33,7 @@ namespace Gameplay.Boot
             {
                 UnityEngine.SceneManagement.SceneManager.LoadScene(nextSceneIndex);
             }
+            yield break;
         }
     }
 }

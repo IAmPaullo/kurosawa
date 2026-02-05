@@ -81,7 +81,7 @@ namespace Gameplay.Managers
             {
                 ThemeController.Setup();
             }
-
+            SaveManager.Init();
             if (AutoStart)
             {
                 int levelToLoad;

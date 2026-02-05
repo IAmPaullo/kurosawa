@@ -55,7 +55,7 @@ Material:
     m_Colors:
     - _BottomColor: {r: 0.96971285, g: 0.17971283, b: 1.3397129, a: 1.5}
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _StarColor: {r: 1.4632612, g: 1.3890055, b: 1.4980394, a: 3.252702}
+    - _StarColor: {r: 3.1771882, g: 3.0159564, b: 3.252702, a: 3.252702}
     - _Tiling: {r: 2, g: 2, b: 0, a: 0}
     - _TopColor: {r: 0.052352905, g: 0.02, b: 0.18823531, a: 1.5}
   m_BuildTextureStacks: []

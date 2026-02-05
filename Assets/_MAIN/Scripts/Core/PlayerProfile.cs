@@ -6,13 +6,10 @@ namespace Gameplay.Core
     public class PlayerProfile
     {
 
+        public string AnalyticsUserId;
         public int LastCompletedLevelIndex = -1;
-
-
-        // Key: Level ID (string), Value: Stars (int)
         public Dictionary<string, int> LevelProgress = new();
         public Dictionary<int, string> LevelGrades = new();
-        public int Coins = 0;
         public bool IsSoundMuted = false;
     }
 }

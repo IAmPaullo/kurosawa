@@ -5277,7 +5277,6 @@ Transform:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 330585546}
-  - {fileID: 2000647543}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1658987953 stripped
@@ -6025,12 +6024,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2000647542}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1628438747}
+  m_Father: {fileID: 2044820056}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2000647544
 MonoBehaviour:
@@ -6044,6 +6043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c95c219a26f06b42a81a7d56416f2f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Main::Gameplay.Managers.SaveManager
+  UserIDVariable: {fileID: 11400000, guid: 84c8ddf4da7dc294496860a61fe31744, type: 2}
 --- !u!1001 &2015358745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6199,6 +6199,7 @@ Transform:
   - {fileID: 61808504}
   - {fileID: 988066360}
   - {fileID: 631530338}
+  - {fileID: 2000647543}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2049271584

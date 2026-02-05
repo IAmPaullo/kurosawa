@@ -13,3 +13,4 @@ public class BoolVariable : ScriptableObject
         OnValueChanged?.Invoke(Value);
     }
 }
+

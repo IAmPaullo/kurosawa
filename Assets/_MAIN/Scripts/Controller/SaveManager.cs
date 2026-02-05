@@ -17,8 +17,12 @@ namespace Gameplay.Managers
         // -1 Use saved progress. any other value force that level value
 
         private string SavePath => Path.Combine(Application.persistentDataPath, "player_save.json");
+        [SerializeField] private StringVariable UserIDVariable;
 
-        private void Awake()
+
+
+
+        public void Init()
         {
             LoadProfile();
         }
@@ -32,12 +36,14 @@ namespace Gameplay.Managers
                 {
                     string json = File.ReadAllText(SavePath);
                     CurrentProfile = JsonConvert.DeserializeObject<PlayerProfile>(json);
+                    EnsureAnalyticsUserId();
                 }
                 catch (System.Exception e)
                 {
                     Debug.LogError($"<b>Save Manager</b?> failed to load save: {e.Message}");
                     CreateNewProfile();
                 }
+
             }
             else
             {
@@ -95,6 +101,20 @@ namespace Gameplay.Managers
         private void CreateNewProfile()
         {
             CurrentProfile = new PlayerProfile();
+            EnsureAnalyticsUserId();
+        }
+        private void EnsureAnalyticsUserId()
+        {
+            if (CurrentProfile == null) return;
+
+            if (string.IsNullOrWhiteSpace(CurrentProfile.AnalyticsUserId))
+            {
+                CurrentProfile.AnalyticsUserId = System.Guid.NewGuid().ToString("N");
+                SaveProfile();
+            }
+            if (UserIDVariable == null)
+                throw new System.Exception("User ID String Variable is Null. This needs immediate attention.");
+            UserIDVariable.SetValue(CurrentProfile.AnalyticsUserId);
         }
 
         public void RegisterLevelCompletion(int levelIndex)

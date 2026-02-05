@@ -31,6 +31,7 @@ namespace Gameplay.UI
             if (!saveManager)
                 saveManager = FindFirstObjectByType<SaveManager>();
 
+            saveManager.Init();
             view.Initialize();
             SetupButtonListeners();
             RefreshVisuals();
