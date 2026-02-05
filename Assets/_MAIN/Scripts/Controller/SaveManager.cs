@@ -134,6 +134,6 @@ namespace Gameplay.Managers
         {
             Application.OpenURL(Application.persistentDataPath);
         }
-    }
 #endif
+    }
 }
