@@ -1,11 +1,12 @@
 using UnityEngine;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities.Editor;
 using Sirenix.Utilities;
 
 
-#if UNITY_EDITOR
+
 using UnityEditor;
+#if UNITY_EDITOR
+using Sirenix.Utilities.Editor;
 #endif
 
 namespace Gameplay.Core.Data
@@ -51,7 +52,7 @@ namespace Gameplay.Core.Data
         private PieceSO DrawPieceElement(Rect rect, PieceSO value)
         {
 
-            PieceSO Result = (PieceSO)SirenixEditorFields.UnityObjectField(rect, value, typeof(PieceSO), true);
+            PieceSO Result = (PieceSO)Sirenix.Utilities.Editor.SirenixEditorFields.UnityObjectField(rect, value, typeof(PieceSO), true);
 
             if (Result != null && Result.Icon != null)
             {
