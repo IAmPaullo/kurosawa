@@ -13,6 +13,23 @@ MonoBehaviour:
   m_Name: Campaign 0
   m_EditorClassIdentifier: Main::Gameplay.Core.Data.CampaignSO
   Levels:
-  - {fileID: 11400000, guid: a2be9421d7936df498f2ea9fc40b2d97, type: 2}
-  - {fileID: 11400000, guid: 5eebc1eb78e2e0d43800c32b7b6e5290, type: 2}
-  - {fileID: 11400000, guid: 827fec2e082ce84439f9c622a80586ce, type: 2}
+  - {fileID: 11400000, guid: 627599cc2b165004b85f9e4a4af3ffc7, type: 2}
+  - {fileID: 11400000, guid: d5484b3634febe7468d615a408385e72, type: 2}
+  - {fileID: 11400000, guid: 54aedfd4bc78221468c5254cf78f7bd5, type: 2}
+  - {fileID: 11400000, guid: 4570029e8af3a5f4dbd6ddce17cc7514, type: 2}
+  - {fileID: 11400000, guid: dcea2160b229c0b4b90e3c5f73275028, type: 2}
+  - {fileID: 11400000, guid: 48eaf8fe1ecf35a46ad41583fb7525dd, type: 2}
+  - {fileID: 11400000, guid: 5dda499ebc6968143a7b69ab3ac70a1c, type: 2}
+  - {fileID: 11400000, guid: e7c667f0869d8724d905de30a03275a7, type: 2}
+  - {fileID: 11400000, guid: 24ad1d5305163564e9fdb8d1157127cc, type: 2}
+  - {fileID: 11400000, guid: 3ceea787ad5fe334b878cf9ca27fd8aa, type: 2}
+  - {fileID: 11400000, guid: f421492dea5e22a4fa8aea90cf61a179, type: 2}
+  - {fileID: 11400000, guid: 1915f40deefff6541ab42b474589db86, type: 2}
+  - {fileID: 11400000, guid: 2a186e3267257bc4d8e4ab41ca287660, type: 2}
+  - {fileID: 11400000, guid: 93b8a229927588c46a7c3cee3ef5eed3, type: 2}
+  - {fileID: 11400000, guid: c4487446f091dab49b85c15a6e16ed52, type: 2}
+  - {fileID: 11400000, guid: 71da1adcd08e05b42ba64a5ec6a152b9, type: 2}
+  - {fileID: 11400000, guid: 93a6c6f6b46bbe142baf71e0254a3508, type: 2}
+  - {fileID: 11400000, guid: 8de339a799fc4e043a7569ae199b7352, type: 2}
+  - {fileID: 11400000, guid: 544cd03c3a36e3e4083eb06132aeaafe, type: 2}
+  - {fileID: 11400000, guid: 3a5c1e4fcb96ddd4e91137f2e4e266de, type: 2}

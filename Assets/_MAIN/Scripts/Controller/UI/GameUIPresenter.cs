@@ -105,6 +105,12 @@ namespace Gameplay.UI
                 view.SettingsButton.onClick.RemoveAllListeners();
                 view.SettingsButton.onClick.AddListener(() => view.OpenSettingsWindow());
             }
+
+            if (view.CheatButton)
+            {
+                view.CheatButton.onClick.RemoveAllListeners();
+                view.CheatButton.onClick.AddListener(() => EventBus<LevelCheatEvent>.Raise(new() { }));
+            }
         }
 
         private void OnPlayClicked()

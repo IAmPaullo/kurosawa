@@ -2938,9 +2938,12 @@ MonoBehaviour:
   ThemesButton: {fileID: 2822668820854545537}
   NextLevelButton: {fileID: 5209484515594404377}
   BackToMenuButton: {fileID: 7980696899870350377}
+  CheatButton: {fileID: 3794103331420168369}
   endGameContainer: {fileID: 8182475278529621227}
   moveOffset: 500
-  animDuration: 0.5
+  moveInDuration: 0.25
+  moveOutDuration: 0.25
+  containersDelay: 0.005
   moveInEase: 1
   moveOutEase: 1
 --- !u!223 &7622782968306623238
@@ -4611,38 +4614,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 532438191841926240, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-      propertyPath: m_fontSize
-      value: 65
-      objectReference: {fileID: 0}
-    - target: {fileID: 4286449596342396824, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -54.99939
-      objectReference: {fileID: 0}
-    - target: {fileID: 7843159925232752315, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7843159925232752315, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1729825779909874527}
-    - target: {fileID: 7843159925232752315, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Close
-      objectReference: {fileID: 0}
-    - target: {fileID: 7843159925232752315, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Gameplay.UI.UIWindowController, Main
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 9054785538574285496, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 283511151093898702, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3033520476359111499}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
 --- !u!114 &1729825779909874527 stripped
 MonoBehaviour:
@@ -4660,71 +4635,12 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 116551587632015834, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
   m_PrefabInstance: {fileID: 2968653884568930353}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3088903205141140991 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 283511151093898702, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
+--- !u!114 &3794103331420168369 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2131779435169081472, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
   m_PrefabInstance: {fileID: 2968653884568930353}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3033520476359111499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3088903205141140991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1da39f3b8047e224288d5e6d7be51b3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Main::ButtonImproved
-  button: {fileID: 5037916782262967946}
-  useUnscaledTime: 1
-  resetOnDisable: 1
-  enableTimer: 0
-  timerUntilEnable: 1.75
-  moveOnHover: 0
-  moveOffset: {x: 6, y: -4}
-  moveDuration: 0.12
-  moveEase: 6
-  scaleOnHover: 1
-  hoverScale: 1.05
-  scaleDuration: 0.12
-  scaleEase: 6
-  colorOnHover: 0
-  colorTarget: {fileID: 3780615485985786999}
-  hoverColor: {r: 1, g: 1, b: 1, a: 1}
-  colorDuration: 0.12
-  glowOnHover: 0
-  glowImage: {fileID: 0}
-  glowAlpha: 0.35
-  glowDuration: 0.12
-  pressScale: 1
-  pressedScale: 0.97
-  pressDuration: 0.08
-  playHoverSound: 0
-  audioSource: {fileID: 0}
-  hoverEnterClip: {fileID: 0}
-  hoverExitClip: {fileID: 0}
-  playClickSound: 0
-  clickClip: {fileID: 0}
-  volume: 1
---- !u!114 &3780615485985786999 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2109293467616576582, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-  m_PrefabInstance: {fileID: 2968653884568930353}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3088903205141140991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
---- !u!114 &5037916782262967946 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7843159925232752315, guid: e628f75bbbd33b24eb3e5718826ff662, type: 3}
-  m_PrefabInstance: {fileID: 2968653884568930353}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3088903205141140991}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}

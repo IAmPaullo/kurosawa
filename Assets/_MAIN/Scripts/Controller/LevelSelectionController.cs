@@ -37,6 +37,8 @@ namespace Gameplay.UI
         {
             setupMenuBinding = new(OnSetupEvent);
             EventBus<MainMenuStartEvent>.Register(setupMenuBinding);
+            NormalizeScrollRectPosition();
+
         }
         private void OnDestroy()
         {
@@ -45,7 +47,6 @@ namespace Gameplay.UI
         private void OnSetupEvent(MainMenuStartEvent _)
         {
             if (saveManager == null) saveManager = FindFirstObjectByType<SaveManager>();
-            scrollRect.onValueChanged.AddListener((_) => NormalizeScrollRectPosition());
             RefreshLevelList();
         }
 

@@ -11,4 +11,6 @@ namespace Gameplay.Core.Events
 
 
     public struct LevelCompletedEvent : IEvent { }
+    public struct LevelCheatEvent : IEvent { }
+
 }

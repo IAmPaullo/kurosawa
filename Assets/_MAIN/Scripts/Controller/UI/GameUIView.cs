@@ -33,6 +33,7 @@ namespace Gameplay.UI
         [SerializeField] public Button ThemesButton;
         [SerializeField] public Button NextLevelButton;
         [SerializeField] public Button BackToMenuButton;
+        [SerializeField] public Button CheatButton;
 
         [Header("End Game")]
         [SerializeField] private GameObject endGameContainer;

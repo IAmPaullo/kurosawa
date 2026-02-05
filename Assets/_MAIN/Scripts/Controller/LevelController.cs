@@ -65,6 +65,7 @@ namespace Gameplay.Core.Controllers
         private EventBinding<MatchPrepareEvent> matchPrepareBind;
         private EventBinding<MatchStartEvent> matchStartBind;
         private EventBinding<MatchEndEvent> matchEndBind;
+        private EventBinding<LevelCheatEvent> levelCheatBind;
 
         private void Awake()
         {
@@ -76,17 +77,22 @@ namespace Gameplay.Core.Controllers
             matchPrepareBind = new(OnMatchPrepare);
             matchStartBind = new(OnMatchStart);
             matchEndBind = new(OnMatchEnd);
+            levelCheatBind = new(OnLevelCheat);
 
             EventBus<MatchPrepareEvent>.Register(matchPrepareBind);
             EventBus<MatchStartEvent>.Register(matchStartBind);
             EventBus<MatchEndEvent>.Register(matchEndBind);
+            EventBus<LevelCheatEvent>.Register(levelCheatBind);
         }
+
 
         private void OnDisable()
         {
             EventBus<MatchPrepareEvent>.Deregister(matchPrepareBind);
             EventBus<MatchStartEvent>.Deregister(matchStartBind);
             EventBus<MatchEndEvent>.Deregister(matchEndBind);
+            EventBus<LevelCheatEvent>.Deregister(levelCheatBind);
+
 
             revealCts?.Cancel();
             revealCts?.Dispose();
@@ -420,6 +426,37 @@ namespace Gameplay.Core.Controllers
         private void RequestVFX()
         {
             winVFX.Play();
+        }
+
+
+        private void OnLevelCheat(LevelCheatEvent _)
+        {
+            ForceWin();
+        }
+
+        [Button("Force Win")]
+        public void ForceWin()
+        {
+            if (GridModel == null || CurrentLevelData == null) return;
+
+            IsInputActive = false;
+
+            int width = CurrentLevelData.Width;
+            int height = CurrentLevelData.Height;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var node = GridModel[x, y];
+                    if (node == null) continue;
+                    if (node.PieceType == PieceType.Lamp) node.IsPowered = true;
+                }
+            }
+
+            UpdateAllViews();
+            RequestVFX();
+            EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent());
         }
     }
 }
