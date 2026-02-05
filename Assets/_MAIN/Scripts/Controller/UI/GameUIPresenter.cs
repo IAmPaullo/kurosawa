@@ -99,6 +99,12 @@ namespace Gameplay.UI
                 view.ThemesButton.onClick.RemoveAllListeners();
                 view.ThemesButton.onClick.AddListener(() => view.OpenThemesWindow());
             }
+
+            if (view.SettingsButton)
+            {
+                view.SettingsButton.onClick.RemoveAllListeners();
+                view.SettingsButton.onClick.AddListener(() => view.OpenSettingsWindow());
+            }
         }
 
         private void OnPlayClicked()

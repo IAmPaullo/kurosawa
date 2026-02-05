@@ -21,6 +21,7 @@ namespace Gameplay.UI
         [Header("Windows")]
         [SerializeField] private UIWindowController themesWindow;
         [SerializeField] private UIWindowController meetMeWindow;
+        [SerializeField] private UIWindowController settingsWindow;
 
         [Header("Buttons")]
         [SerializeField] public Button PlayButton;
@@ -102,11 +103,13 @@ namespace Gameplay.UI
 
         public void OpenThemesWindow() => themesWindow?.Open();
         public void OpenMeetMeWindow() => meetMeWindow?.Open();
+        public void OpenSettingsWindow() => settingsWindow?.Open();
 
         private void CloseAllWindows()
         {
             themesWindow?.Close();
             meetMeWindow?.Close();
+            settingsWindow?.Close();
         }
 
 
