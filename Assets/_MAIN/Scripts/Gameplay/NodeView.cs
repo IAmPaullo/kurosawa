@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Gameplay.Core;
 using Gameplay.Core.Events;
+using Gameplay.VFX;
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
@@ -60,6 +61,8 @@ namespace Gameplay.Views
             }
             IsPowered = isPowered;
             pieceView.PiecePowerRoutine(IsPowered, instant);
+
+
         }
         public void SetAsDummy()
         {
@@ -121,6 +124,7 @@ namespace Gameplay.Views
                 meshRenderer.SetPropertyBlock(mainMpb);
             }
         }
+
         [Button]
         public Tween DummyMoveAwayTween()
         {
@@ -130,6 +134,11 @@ namespace Gameplay.Views
                         .SetEase(moveAwayEase)
                         .OnComplete(() => gameObject.SetActive(false));
             return tween;
+        }
+
+        public void NodePieceVFXOneShot()
+        {
+            pieceView.RequestVFX();
         }
     }
 }

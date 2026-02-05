@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Gameplay.Core.Events;
+using Gameplay.VFX;
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Gameplay.Views
 
         [SerializeField] private MeshFilter glowMeshFilter;
         [SerializeField] private MeshRenderer glowMeshRenderer;
+        [SerializeField] private VFXItem vfxItem;
 
         [SerializeField] private Color emissionBaseColor = Color.white;
 
@@ -60,8 +62,8 @@ namespace Gameplay.Views
             if (glowMeshRenderer)
             {
                 glowMeshRenderer.GetPropertyBlock(glowMpb);
-                glowMpb.SetFloat(IsEmissiveBoolId, 1f);                 
-                glowMpb.SetColor(EmissionColorId, emissionBaseColor);   
+                glowMpb.SetFloat(IsEmissiveBoolId, 1f);
+                glowMpb.SetColor(EmissionColorId, emissionBaseColor);
                 glowMeshRenderer.SetPropertyBlock(glowMpb);
             }
 
@@ -76,6 +78,12 @@ namespace Gameplay.Views
                 SetPowered(powered: true, animated: !instant, pulsing: !instant);
             else
                 SetPowered(powered: false, animated: !instant, pulsing: false);
+        }
+
+
+        public void RequestVFX()
+        {
+            vfxItem.Play();
         }
 
         public void UpdateTheme(Color topColor, Color bottomColor, Color glowColor)

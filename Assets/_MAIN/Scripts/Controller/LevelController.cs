@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Gameplay.Core;
 using Gameplay.Core.Data;
 using Gameplay.Core.Events;
 using Gameplay.Managers;
+using Gameplay.VFX;
 using Gameplay.Views;
 using Sirenix.OdinInspector;
 using System;
@@ -34,8 +34,11 @@ namespace Gameplay.Core.Controllers
         [SerializeField] private NodeView NodePrefab;
         [Required, SceneObjectsOnly, BoxGroup("References")]
         [SerializeField] private Transform PiecesContainer;
+        [Required, SceneObjectsOnly, BoxGroup("References")]
+        [SerializeField] private VFXItem winVFX;
 
         private NodeModel[,] GridModel;
+        private NodeView[,] GridViews;
         private bool IsInputActive = false;
 
         [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
@@ -122,10 +125,7 @@ namespace Gameplay.Core.Controllers
 
             ResetLevelState();
 
-            int maxGridSize = CurrentLevelData.VisualGridSize;
-
-
-            currentVisualGridSize = Mathf.Max(maxGridSize, CurrentLevelData.Width, CurrentLevelData.Height);
+            currentVisualGridSize = Mathf.Max(CurrentLevelData.VisualGridSize, CurrentLevelData.Width, CurrentLevelData.Height);
 
             levelStartX = Mathf.Max(0, (currentVisualGridSize - CurrentLevelData.Width) / 2);
             levelStartY = Mathf.Max(0, (currentVisualGridSize - CurrentLevelData.Height) / 2);
@@ -159,6 +159,7 @@ namespace Gameplay.Core.Controllers
             OnMatchStart(new MatchStartEvent());
         }
 #endif
+
         private void ResetLevelState()
         {
             foreach (var Node in NodePool)
@@ -171,11 +172,13 @@ namespace Gameplay.Core.Controllers
             DummyViews.Clear();
             MiscViews.Clear();
             GridModel = null;
+            GridViews = null;
         }
 
         private void GenerateFullGrid()
         {
             GridModel = new NodeModel[CurrentLevelData.Width, CurrentLevelData.Height];
+            GridViews = new NodeView[CurrentLevelData.Width, CurrentLevelData.Height];
 
             int maxGridSize = currentVisualGridSize;
             int totalRequired = maxGridSize * maxGridSize;
@@ -197,12 +200,10 @@ namespace Gameplay.Core.Controllers
                     ViewInstance.gameObject.SetActive(true);
                     ViewInstance.transform.position = Position;
 
-
                     int levelX = X - levelStartX;
                     int levelY = Y - levelStartY;
 
                     ViewInstance.gameObject.name = $"X:{X},Y:{Y}";
-
                     PoolIndex++;
 
                     bool isInsideLevel = IsInsideLevelBounds(levelX, levelY);
@@ -218,6 +219,7 @@ namespace Gameplay.Core.Controllers
                         else
                         {
                             SetupRealNode(levelX, levelY, ViewInstance, pieceData);
+                            GridViews[levelX, levelY] = ViewInstance;
                         }
                     }
                     else
@@ -225,8 +227,8 @@ namespace Gameplay.Core.Controllers
                         SetupDummyNode(ViewInstance);
                     }
                 }
-                EventBus<RequestThemeEvent>.Raise(new() { });
             }
+            EventBus<RequestThemeEvent>.Raise(new() { });
         }
 
         private void ExpandPool(int Amount)
@@ -275,21 +277,12 @@ namespace Gameplay.Core.Controllers
             }
 
             float baseGap = 0.015f;
-
             Sequence scaleSeq = DOTween.Sequence();
             DummyViews.Shuffle();
 
             for (int i = 0; i < DummyViews.Count; i++)
             {
-                NodeView dummy = DummyViews[i];
-                float startAt = i * baseGap;
-
-                scaleSeq.Insert(startAt,
-                    //TweenScale.SquashY(dummy.transform, .25f, duration)
-                    //    .SetEase(Ease.InBack)
-                    //    .OnComplete(() => dummy.gameObject.SetActive(false))
-                    dummy.DummyMoveAwayTween()
-                );
+                scaleSeq.Insert(i * baseGap, DummyViews[i].DummyMoveAwayTween());
             }
 
             scaleSeq.Play();
@@ -297,7 +290,6 @@ namespace Gameplay.Core.Controllers
             UpdateAllViews();
 
             IsInputActive = true;
-
         }
 
         public void OnNodeInteraction(int x, int y)
@@ -306,7 +298,6 @@ namespace Gameplay.Core.Controllers
             if (GridModel == null || !IsInsideLevelBounds(x, y) || GridModel[x, y] == null) return;
 
             GridModel[x, y].Rotate();
-
             RequestNodeSoundEffect(Gameplay.Audio.SFXType.Node_Rotate);
 
             RecalculateFlow();
@@ -334,9 +325,7 @@ namespace Gameplay.Core.Controllers
                     var node = GridModel[x, y];
                     if (node != null)
                     {
-                        if (node.IsPowered)
-                            poweredCache.Add(node);
-
+                        if (node.IsPowered) poweredCache.Add(node);
                         node.IsPowered = false;
                     }
                 }
@@ -360,7 +349,6 @@ namespace Gameplay.Core.Controllers
             while (flowQueue.Count > 0)
             {
                 var current = flowQueue.Dequeue();
-
                 CheckNeighbor(current, 0, 1, Direction.Up, Direction.Down, flowQueue, poweredCache);
                 CheckNeighbor(current, 1, 0, Direction.Right, Direction.Left, flowQueue, poweredCache);
                 CheckNeighbor(current, 0, -1, Direction.Down, Direction.Up, flowQueue, poweredCache);
@@ -369,39 +357,46 @@ namespace Gameplay.Core.Controllers
         }
 
         private void CheckNeighbor(NodeModel current, int offsetX, int offsetY, Direction outDir, Direction inDir,
-                                    Queue<NodeModel> queue, HashSet<NodeModel> previouslyPowered)
+            Queue<NodeModel> queue, HashSet<NodeModel> previouslyPowered)
         {
             if ((current.GetCurrentConnections() & outDir) == 0) return;
 
-            int TargetX = current.X + offsetX;
-            int TargetY = current.Y + offsetY;
+            int targetX = current.X + offsetX;
+            int targetY = current.Y + offsetY;
 
-            if (IsInsideLevelBounds(TargetX, TargetY))
+            if (IsInsideLevelBounds(targetX, targetY))
             {
-                NodeModel Neighbor = GridModel[TargetX, TargetY];
-                if (Neighbor == null || Neighbor.IsPowered) return;
+                NodeModel neighbor = GridModel[targetX, targetY];
+                if (neighbor == null || neighbor.IsPowered) return;
 
-                if ((Neighbor.GetCurrentConnections() & inDir) != 0)
+                if ((neighbor.GetCurrentConnections() & inDir) != 0)
                 {
-                    // checks withing the cache
-                    if (!previouslyPowered.Contains(Neighbor))
+                    if (!previouslyPowered.Contains(neighbor))
                     {
+                        NodeView neighborView = GridViews[targetX, targetY];
+                        if (neighborView != null) PieceCallVFX(neighborView);
+
                         RequestNodeSoundEffect(Gameplay.Audio.SFXType.Node_Connect);
                     }
 
-                    Neighbor.IsPowered = true;
-                    queue.Enqueue(Neighbor);
+                    neighbor.IsPowered = true;
+                    queue.Enqueue(neighbor);
                 }
             }
         }
 
         private void UpdateAllViews()
         {
-            foreach (var View in ActiveViews)
+            foreach (var view in ActiveViews)
             {
-                NodeModel Model = GridModel[View.XPosition, View.YPosition];
-                View.UpdateVisuals(Model.RotationIndex, Model.IsPowered);
+                NodeModel model = GridModel[view.XPosition, view.YPosition];
+                view.UpdateVisuals(model.RotationIndex, model.IsPowered);
             }
+        }
+
+        private void PieceCallVFX(NodeView view)
+        {
+            view.NodePieceVFXOneShot();
         }
 
         private void CheckWinCondition()
@@ -418,9 +413,13 @@ namespace Gameplay.Core.Controllers
                         return;
                 }
             }
-
-            Debug.Log("LevelCompletedEvent Raised. Finishing match...");
+            RequestVFX();
             EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent());
+        }
+
+        private void RequestVFX()
+        {
+            winVFX.Play();
         }
     }
 }
