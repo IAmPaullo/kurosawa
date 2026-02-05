@@ -129,9 +129,6 @@ namespace Gameplay.Settings
         {
             bool ShowRestart = ScreenMode == SettingsScreenMode.Gameplay;
 
-            if (View.RestartLevelButton != null)
-                View.RestartLevelButton.gameObject.SetActive(ShowRestart);
-
             if (View.BackToMenuButton != null)
                 View.BackToMenuButton.gameObject.SetActive(true);
         }
@@ -147,9 +144,6 @@ namespace Gameplay.Settings
             if (View.HapticsButton != null)
                 View.HapticsButton.onClick.AddListener(OnHapticsButtonClicked);
 
-            if (View.RestartLevelButton != null)
-                View.RestartLevelButton.onClick.AddListener(OnRestartLevelClicked);
-
             if (View.BackToMenuButton != null)
                 View.BackToMenuButton.onClick.AddListener(OnBackToMenuClicked);
         }
@@ -164,9 +158,6 @@ namespace Gameplay.Settings
 
             if (View.HapticsButton != null)
                 View.HapticsButton.onClick.RemoveListener(OnHapticsButtonClicked);
-
-            if (View.RestartLevelButton != null)
-                View.RestartLevelButton.onClick.RemoveListener(OnRestartLevelClicked);
 
             if (View.BackToMenuButton != null)
                 View.BackToMenuButton.onClick.RemoveListener(OnBackToMenuClicked);
@@ -208,16 +199,13 @@ namespace Gameplay.Settings
             SaveToPrefs();
         }
 
-        private void OnRestartLevelClicked()
-        {
-            SaveToPrefs();
-            RestartLevelRequested?.Invoke();
-        }
-
         private void OnBackToMenuClicked()
         {
             SaveToPrefs();
-            BackToMenuRequested?.Invoke();
+            if (SceneEvents.Instance != null)
+            {
+                SceneEvents.Instance.TriggerChangeSceneAsync(1);
+            }
         }
 
         private void OnMasterVariableChanged(float value) => ApplyToView();
@@ -271,7 +259,6 @@ namespace Gameplay.Settings
             public Button HapticsButton;
             public TextMeshProUGUI HapticsLabel;
 
-            public Button RestartLevelButton;
             public Button BackToMenuButton;
         }
     }
