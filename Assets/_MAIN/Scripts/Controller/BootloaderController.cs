@@ -12,28 +12,48 @@ namespace Gameplay.Boot
         [SerializeField] private int nextSceneIndex = 1;
         [SerializeField] private SaveManager saveManager;
         [SerializeField] private AmplitudeBootstrap amplitudeBootstrap;
+        [SerializeField] private SplashScreenSystem splashScreen;
 
+        bool splashScreenSkipped;
         private IEnumerator Start()
         {
 
             Debug.Log("Initializing Systems");
-            saveManager.Init();
-            amplitudeBootstrap.Init();
+            SetupSplashScreen();
+            InitSaveManager();
+            InitAmplitudeSDK();
 
-            yield return new WaitForEndOfFrame();
+            bool canProceed = false;
+            splashScreen.onSplashFinished.AddListener(() => canProceed = true);
+            splashScreen.Init();
 
-            Debug.Log("Loading Menu");
+            yield return new WaitUntil(() => canProceed);
+
+            Debug.Log("Loading Scene Index: " + nextSceneIndex);
 
             if (SceneEvents.Instance != null)
             {
                 SceneEvents.Instance.TriggerChangeSceneAsync(nextSceneIndex);
-
             }
             else
             {
                 UnityEngine.SceneManagement.SceneManager.LoadScene(nextSceneIndex);
             }
-            yield break;
+        }
+
+        private void InitAmplitudeSDK()
+        {
+            amplitudeBootstrap.Init();
+        }
+
+        private void InitSaveManager()
+        {
+            saveManager.Init();
+        }
+
+        private void SetupSplashScreen()
+        {
+            splashScreen.Init();
         }
     }
 }
