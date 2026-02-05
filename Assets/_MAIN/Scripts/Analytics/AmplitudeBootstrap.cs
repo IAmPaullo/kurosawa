@@ -1,5 +1,7 @@
 using Gameplay.Managers;
 using Sirenix.OdinInspector;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class AmplitudeBootstrap : MonoBehaviour
@@ -18,17 +20,22 @@ public class AmplitudeBootstrap : MonoBehaviour
         if (UserIDVariable == null)
             throw new System.Exception("User ID String Variable is Null. This needs immediate attention.");
 
-        var amp = Amplitude.getInstance();
+        Amplitude amp = Amplitude.getInstance();
         amp.logging = enableLogging;
         amp.trackSessionEvents(true);
         amp.init(apiKey);
-
         if (!string.IsNullOrWhiteSpace(UserIDVariable.Value))
             amp.setUserId(UserIDVariable.Value);
 
         UserIDVariable.OnValueChanged += OnUserIdChanged;
+        StartCoroutine(LogStart());
+    }
 
-        amp.logEvent("app_start");
+    private IEnumerator LogStart()
+    {
+        yield return new WaitForEndOfFrame();
+        Amplitude amp = Amplitude.getInstance();
+        amp.logEvent("Game_Start");
     }
 
     private void OnDestroy()
@@ -41,4 +48,5 @@ public class AmplitudeBootstrap : MonoBehaviour
         if (string.IsNullOrWhiteSpace(id)) return;
         Amplitude.getInstance().setUserId(id);
     }
+
 }
