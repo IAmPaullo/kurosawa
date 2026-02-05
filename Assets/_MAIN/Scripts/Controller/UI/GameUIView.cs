@@ -39,7 +39,9 @@ namespace Gameplay.UI
 
         [Header("Animation Settings")]
         [SerializeField] private float moveOffset = 500f;
-        [SerializeField] private float animDuration = 0.5f;
+        [SerializeField] private float moveInDuration = 0.25f;
+        [SerializeField] private float moveOutDuration = 0.25f;
+        [SerializeField] private float containersDelay = .005f;
         [SerializeField] private Ease moveInEase = Ease.Linear;
         [SerializeField] private Ease moveOutEase = Ease.Linear;
 
@@ -90,7 +92,7 @@ namespace Gameplay.UI
                 if (state == GameUIPresenter.UIState.Playing || state == GameUIPresenter.UIState.PreMatch)
                     AnimateOut();
                 else
-                    AnimateIn(); 
+                    AnimateIn();
             }
             else
             {
@@ -121,9 +123,11 @@ namespace Gameplay.UI
             canvasGroup.interactable = true;
 
             uiSequence.Append(background.DOFade(.25f, .25f));
-            uiSequence.Append(MoveContainer(topSideGroup, topTargetPos, animDuration, moveInEase));
-            uiSequence.Join(MoveContainer(rightSideGroup, rightTargetPos, animDuration, moveInEase)); 
-            uiSequence.Join(MoveContainer(bottomSideGroup, bottomTargetPos, animDuration, moveInEase));
+            uiSequence.Append(MoveContainer(topSideGroup, topTargetPos, moveInDuration, moveInEase));
+            uiSequence.AppendInterval(containersDelay);
+            uiSequence.Join(MoveContainer(rightSideGroup, rightTargetPos, moveInDuration, moveInEase));
+            uiSequence.AppendInterval(containersDelay);
+            uiSequence.Join(MoveContainer(bottomSideGroup, bottomTargetPos, moveInDuration, moveInEase));
         }
 
         private void AnimateOut()
@@ -133,9 +137,11 @@ namespace Gameplay.UI
             canvasGroup.interactable = false;
 
             uiSequence.Join(background.DOFade(0, .25f));
-            uiSequence.Join(MoveContainer(topSideGroup, topTargetPos + (Vector2.up * moveOffset), animDuration, moveOutEase));
-            uiSequence.Join(MoveContainer(rightSideGroup, rightTargetPos + (Vector2.right * moveOffset), animDuration, moveOutEase));
-            uiSequence.Join(MoveContainer(bottomSideGroup, bottomTargetPos + (2 * moveOffset * Vector2.down), animDuration, moveOutEase));
+            uiSequence.Join(MoveContainer(topSideGroup, topTargetPos + (Vector2.up * moveOffset), moveOutDuration, moveOutEase));
+            uiSequence.AppendInterval(containersDelay);
+            uiSequence.Join(MoveContainer(rightSideGroup, rightTargetPos + (Vector2.right * moveOffset), moveOutDuration, moveOutEase));
+            uiSequence.AppendInterval(containersDelay);
+            uiSequence.Join(MoveContainer(bottomSideGroup, bottomTargetPos + (2 * moveOffset * Vector2.down), moveOutDuration, moveOutEase));
         }
 
         private void SetMenuVisible()
