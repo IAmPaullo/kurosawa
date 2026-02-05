@@ -46,7 +46,7 @@ namespace Gameplay.Core.Controllers
         private readonly List<NodeView> DummyViews = new();
 
         [ShowInInspector, ReadOnly, FoldoutGroup("Views List")]
-        private List<NodeView> NodePool = new();
+        private readonly List<NodeView> NodePool = new();
 
         private CancellationTokenSource revealCts;
         private Queue<NodeModel> flowQueue;
@@ -55,6 +55,7 @@ namespace Gameplay.Core.Controllers
         private int levelStartX;
         private int levelStartY;
         private Vector3 levelWorldOrigin;
+        private readonly HashSet<NodeModel> poweredCache = new();
 
         private EventBinding<MatchPrepareEvent> matchPrepareBind;
         private EventBinding<MatchStartEvent> matchStartBind;
@@ -107,7 +108,11 @@ namespace Gameplay.Core.Controllers
             IsInputActive = false;
             CurrentLevelData = evt.LevelData;
 
-            flowQueue = new Queue<NodeModel>(CurrentLevelData.Width * CurrentLevelData.Height);
+            int totalNodes = CurrentLevelData.Width * CurrentLevelData.Height;
+
+            flowQueue = new Queue<NodeModel>(totalNodes);
+            poweredCache.Clear();
+            poweredCache.EnsureCapacity(totalNodes);
 
             revealCts?.Cancel();
             revealCts?.Dispose();
@@ -318,12 +323,20 @@ namespace Gameplay.Core.Controllers
             int width = CurrentLevelData.Width;
             int height = CurrentLevelData.Height;
 
+            poweredCache.Clear();
+
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
                     var node = GridModel[x, y];
-                    if (node != null) node.IsPowered = false;
+                    if (node != null)
+                    {
+                        if (node.IsPowered)
+                            poweredCache.Add(node);
+
+                        node.IsPowered = false;
+                    }
                 }
             }
 
@@ -345,14 +358,16 @@ namespace Gameplay.Core.Controllers
             while (flowQueue.Count > 0)
             {
                 var current = flowQueue.Dequeue();
-                CheckNeighbor(current, 0, 1, Direction.Up, Direction.Down, flowQueue);
-                CheckNeighbor(current, 1, 0, Direction.Right, Direction.Left, flowQueue);
-                CheckNeighbor(current, 0, -1, Direction.Down, Direction.Up, flowQueue);
-                CheckNeighbor(current, -1, 0, Direction.Left, Direction.Right, flowQueue);
+
+                CheckNeighbor(current, 0, 1, Direction.Up, Direction.Down, flowQueue, poweredCache);
+                CheckNeighbor(current, 1, 0, Direction.Right, Direction.Left, flowQueue, poweredCache);
+                CheckNeighbor(current, 0, -1, Direction.Down, Direction.Up, flowQueue, poweredCache);
+                CheckNeighbor(current, -1, 0, Direction.Left, Direction.Right, flowQueue, poweredCache);
             }
         }
 
-        private void CheckNeighbor(NodeModel current, int offsetX, int offsetY, Direction outDir, Direction inDir, Queue<NodeModel> queue)
+        private void CheckNeighbor(NodeModel current, int offsetX, int offsetY, Direction outDir, Direction inDir,
+                                    Queue<NodeModel> queue, HashSet<NodeModel> previouslyPowered)
         {
             if ((current.GetCurrentConnections() & outDir) == 0) return;
 
@@ -366,8 +381,12 @@ namespace Gameplay.Core.Controllers
 
                 if ((Neighbor.GetCurrentConnections() & inDir) != 0)
                 {
-                    if (!Neighbor.IsPowered)
+                    // checks withing the cache
+                    if (!previouslyPowered.Contains(Neighbor))
+                    {
                         RequestNodeSoundEffect(Gameplay.Audio.SFXType.Node_Connect);
+                    }
+
                     Neighbor.IsPowered = true;
                     queue.Enqueue(Neighbor);
                 }
