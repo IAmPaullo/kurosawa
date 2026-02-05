@@ -32,7 +32,7 @@ namespace Gameplay.Audio
              {
                  if (AudioManager.Instance != null)
                  {
-                     AudioManager.Instance.PlaySFX(soundType);
+                     AudioManager.Instance.PlaySFX(soundType, 0);
                  }
              });
         }

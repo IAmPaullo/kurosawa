@@ -23,7 +23,7 @@ namespace Gameplay.UI
 
         [BoxGroup("Dependencies")]
         [SerializeField] private SaveManager saveManager;
-        [SerializeField] private MainMenuController mainMenuController;
+        [SerializeField] private MainMenuPresenter mainMenuPresent;
 
         private List<LevelButton_UI> buttonPool = new();
 
@@ -85,7 +85,7 @@ namespace Gameplay.UI
                         levelIndex,
                         isUnlocked,
                         grade,
-                        () => mainMenuController.SelectLevelAndPlay(levelIndex)
+                        () => mainMenuPresent.SelectLevelAndPlay(levelIndex)
                     );
                 }
                 else

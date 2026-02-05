@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5715385583559032779}
   - component: {fileID: 2156591449298271519}
   - component: {fileID: 8863449333111993977}
+  - component: {fileID: 8612383577647430537}
   m_Layer: 0
   m_Name: Level Index TMP
   m_TagString: Untagged
@@ -92,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 223.75
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -136,6 +137,26 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8612383577647430537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267684594450012863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d0d754a25464e41893c1d8d8e75cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::ThemeColorApplier
+  runtime: {fileID: 11400000, guid: f507fc933bb35d1429c461b5e4be0e7f, type: 2}
+  image: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  textMeshProUGUI: {fileID: 8863449333111993977}
+  colorSource: 0
+  gradientTime: 0.5
+  preserveCurrentAlpha: 1
+  forcedAlpha: 1
 --- !u!1 &5426247272100958935
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,6 +306,8 @@ GameObject:
   - component: {fileID: 5677702750757691602}
   - component: {fileID: 8584757390292058795}
   - component: {fileID: 6854369347104705179}
+  - component: {fileID: 2987949502252348634}
+  - component: {fileID: 525373438548888667}
   m_Layer: 0
   m_Name: Level Select Button
   m_TagString: Untagged
@@ -411,3 +434,37 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2987949502252348634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142023776013565636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d0d754a25464e41893c1d8d8e75cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::ThemeColorApplier
+  runtime: {fileID: 11400000, guid: f507fc933bb35d1429c461b5e4be0e7f, type: 2}
+  image: {fileID: 8584757390292058795}
+  spriteRenderer: {fileID: 0}
+  textMeshProUGUI: {fileID: 0}
+  colorSource: 1
+  gradientTime: 0.5
+  preserveCurrentAlpha: 1
+  forcedAlpha: 1
+--- !u!114 &525373438548888667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8142023776013565636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bada92e3010d9b418309605118f01bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Main::Gameplay.Audio.PlaySoundOnClick
+  soundType: 0
+  button: {fileID: 6854369347104705179}

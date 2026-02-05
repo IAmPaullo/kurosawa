@@ -366,7 +366,8 @@ namespace Gameplay.Core.Controllers
 
                 if ((Neighbor.GetCurrentConnections() & inDir) != 0)
                 {
-                    RequestNodeSoundEffect(Gameplay.Audio.SFXType.Node_Connect);
+                    if (!Neighbor.IsPowered)
+                        RequestNodeSoundEffect(Gameplay.Audio.SFXType.Node_Connect);
                     Neighbor.IsPowered = true;
                     queue.Enqueue(Neighbor);
                 }

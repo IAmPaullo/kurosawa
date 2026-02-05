@@ -1,3 +1,4 @@
+using Gameplay.Boot.Events;
 using Gameplay.Core.Events;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -8,7 +9,6 @@ public class ThemeController : MonoBehaviour
 
     [SerializeField] private ThemeRuntimeSO runtimeTheme;
     [SerializeField] private ThemeLibrarySO themeLibrary;
-
 
     public void Setup()
     {
@@ -56,15 +56,20 @@ public class ThemeController : MonoBehaviour
         EventBus<ThemeUpdateEvent>.Raise(new() { Theme = chosenTheme });
     }
 
+
     private EventBinding<RequestThemeEvent> themeRequestBind;
+    private EventBinding<MainMenuStartEvent> mainMenuStartBind;
     private void OnEnable()
     {
         themeRequestBind = new(OnRequestTheme);
+        mainMenuStartBind = new(() => Setup());
         EventBus<RequestThemeEvent>.Register(themeRequestBind);
+        EventBus<MainMenuStartEvent>.Register(mainMenuStartBind);
     }
     private void OnDestroy()
     {
         EventBus<RequestThemeEvent>.Deregister(themeRequestBind);
+        EventBus<MainMenuStartEvent>.Deregister(mainMenuStartBind);
     }
 
     private void OnRequestTheme(RequestThemeEvent _)
