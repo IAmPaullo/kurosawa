@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Sea-Glass
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: fe739da2-bc30-450e-af18-cf135515ecc4
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.8745098, g: 0.96862745, b: 0.9607843, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 1.7098039, g: 3.1843138, b: 3.1215687, a: 4}
   SkyTopColor: {r: 1.2976471, g: 1.4529412, b: 1.44, a: 1.5}
   SkyBottomColor: {r: 0.7062295, g: 1.1762296, b: 1.1562296, a: 1.5}
+  StarsColor: {r: 0.13232353, g: 0.22652237, b: 0.28517178, a: 1.6500001}
   FakeFogColor: {r: 0.9294517, g: 1.1110678, b: 1.0983227, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

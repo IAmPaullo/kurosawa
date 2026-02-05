@@ -4507,7 +4507,7 @@ GameObject:
   - component: {fileID: 1184211513}
   - component: {fileID: 1184211512}
   m_Layer: 0
-  m_Name: Fake Fog
+  m_Name: Fake Fog Bounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5408,7 +5408,7 @@ GameObject:
   - component: {fileID: 1504812567}
   - component: {fileID: 1504812566}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Fake Fog Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

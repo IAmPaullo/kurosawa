@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Deep-Current
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 1576b86a-6f60-40e9-b430-e43f552d494b
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.007843138, g: 0.023529412, b: 0.09019608, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 0.8784314, g: 2.964706, b: 3.890196, a: 4}
   SkyTopColor: {r: 0, g: 0.025770277, b: 0.13529412, a: 1.5}
   SkyBottomColor: {r: 0.42557412, g: 1.0905741, b: 1.385574, a: 1.5}
+  StarsColor: {r: 2.4233599, g: 2.531209, b: 2.5790517, a: 2.584728}
   FakeFogColor: {r: 0.10419912, g: 0.20934476, b: 0.35591197, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

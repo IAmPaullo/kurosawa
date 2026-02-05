@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Night-Spa
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: a3e5e97b-fb9c-4fe6-8e44-a0a808a1d0e3
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.043137256, g: 0.07450981, b: 0.1254902, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 0.7372549, g: 1.4588236, b: 1.5372549, a: 4}
   SkyTopColor: {r: 0.05235293, g: 0.10411765, b: 0.18823531, a: 1.5}
   SkyBottomColor: {r: 0.3087483, g: 0.5387483, b: 0.5637483, a: 1.5}
+  StarsColor: {r: 2.8438005, g: 2.8877056, b: 2.892478, a: 3.0423274}
   FakeFogColor: {r: 0.16000116, g: 0.22053985, b: 0.27152008, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

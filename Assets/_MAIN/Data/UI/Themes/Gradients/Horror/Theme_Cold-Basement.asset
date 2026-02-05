@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Cold-Basement
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 69a85619-8f3e-4cc9-ac98-e4b1bdda4af1
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.019607844, g: 0.023529412, b: 0.039215688, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 0.65882355, g: 0.7372549, b: 0.9098039, a: 4}
   SkyTopColor: {r: 0.02647059, g: 0.032941177, b: 0.058823533, a: 1.5}
   SkyBottomColor: {r: 0.25123343, g: 0.27623343, b: 0.3312334, a: 1.5}
+  StarsColor: {r: 3.2217293, g: 3.227145, b: 3.2390592, a: 3.452433}
   FakeFogColor: {r: 0.08359816, g: 0.09315688, b: 0.1218331, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

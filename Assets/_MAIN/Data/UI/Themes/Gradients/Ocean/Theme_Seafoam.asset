@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Seafoam
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 6641ed44-55c7-43e7-bc4c-7d69d206ac0e
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.015686275, g: 0.105882354, b: 0.11372549, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 2.619608, g: 3.8117647, b: 3.2627451, a: 4}
   SkyTopColor: {r: 0.008823529, g: 0.15764707, b: 0.17058824, a: 1.5}
   SkyBottomColor: {r: 1.0329254, g: 1.4129254, b: 1.2379254, a: 1.5}
+  StarsColor: {r: 2.2016096, g: 2.2555933, b: 2.2307324, a: 2.264117}
   FakeFogColor: {r: 0.27298632, g: 0.75410753, b: 0.76366633, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

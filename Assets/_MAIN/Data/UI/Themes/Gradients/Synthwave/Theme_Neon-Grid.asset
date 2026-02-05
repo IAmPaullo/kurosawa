@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Neon-Grid
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: fda01f19-f9fe-4619-bea2-4ed79972b49a
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.023529412, g: 0.039215688, b: 0.078431375, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 2.8705883, g: 4, b: 0, a: 4}
   SkyTopColor: {r: 0.027058821, g: 0.052941207, b: 0.11764707, a: 1.5}
   SkyBottomColor: {r: 1.1102487, g: 1.4702487, b: 0.19524866, a: 1.5}
+  StarsColor: {r: 2.4015849, g: 2.457086, b: 2.2605193, a: 2.457086}
   FakeFogColor: {r: 0.111118264, g: 0.19714655, b: 0.22582307, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

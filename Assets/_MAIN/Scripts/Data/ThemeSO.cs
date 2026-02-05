@@ -20,6 +20,8 @@ public class ThemeSO : ScriptableObject
     public Color SkyTopColor = Color.white;
     [ColorUsage(true, true), BoxGroup("Skybox Colors")]
     public Color SkyBottomColor = Color.white;
+    [ColorUsage(true, true), BoxGroup("Skybox Colors")]
+    public Color StarsColor = Color.white;
 
 
     [ColorUsage(true, true), BoxGroup("Fog Colors")]

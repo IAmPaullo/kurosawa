@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Terracotta
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 3d4f98e1-607e-444d-9316-37a1328d5992
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.16470589, g: 0.05882353, b: 0.03137255, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 3.7960784, g: 2.6039217, b: 1.4117647, a: 4}
   SkyTopColor: {r: 0.24705884, g: 0.07235293, b: 0.027058814, a: 1.5}
   SkyBottomColor: {r: 1.3658856, g: 0.98588574, b: 0.6058857, a: 1.5}
+  StarsColor: {r: 2.3405633, g: 2.2845285, b: 2.2284935, a: 2.3501482}
   FakeFogColor: {r: 0.57325065, g: 0.31516498, b: 0.22276409, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

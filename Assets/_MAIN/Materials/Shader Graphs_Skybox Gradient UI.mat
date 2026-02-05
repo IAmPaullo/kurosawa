@@ -49,14 +49,14 @@ Material:
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
-    - _TimeModifier: 0.398
+    - _TimeModifier: 0.366
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
     m_Colors:
-    - _BottomColor: {r: 1.3783705, g: 0.48837048, b: 0.6483705, a: 1.5}
+    - _BottomColor: {r: 0.96971285, g: 0.17971283, b: 1.3397129, a: 1.5}
     - _ClipRect: {r: 0, g: 0, b: 0, a: 0}
-    - _StarColor: {r: 1, g: 1, b: 1, a: 1}
+    - _StarColor: {r: 1.4632612, g: 1.3890055, b: 1.4980394, a: 3.252702}
     - _Tiling: {r: 2, g: 2, b: 0, a: 0}
-    - _TopColor: {r: 0.048823513, g: 0.081176504, b: 0.22352943, a: 1.5}
+    - _TopColor: {r: 0.052352905, g: 0.02, b: 0.18823531, a: 1.5}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Sage-Breeze
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: a348ffb8-d1cc-4bef-b23c-1e55686893ef
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.9137255, g: 0.9529412, b: 0.93333334, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 2.6509805, g: 3.1843138, b: 2.9803922, a: 4}
   SkyTopColor: {r: 1.3647059, g: 1.4294118, b: 1.3970587, a: 1.5}
   SkyBottomColor: {r: 1.0169115, g: 1.1869115, b: 1.1219115, a: 1.5}
+  StarsColor: {r: 0.16338237, g: 0.22652237, b: 0.28051296, a: 1.6500001}
   FakeFogColor: {r: 1.0260359, g: 1.1025058, b: 1.0642709, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

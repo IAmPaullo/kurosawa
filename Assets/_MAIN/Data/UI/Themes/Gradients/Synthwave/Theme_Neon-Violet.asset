@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Neon-Violet
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 1b16a78f-93f3-46d6-8d8e-4fb3d5dbaea2
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.043137256, g: 0.023529412, b: 0.1254902, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 2.8392158, g: 0.36078432, b: 4, a: 4}
   SkyTopColor: {r: 0.052352905, g: 0.02, b: 0.18823531, a: 1.5}
   SkyBottomColor: {r: 0.96971285, g: 0.17971283, b: 1.3397129, a: 1.5}
+  StarsColor: {r: 3.1771882, g: 3.0159564, b: 3.252702, a: 3.252702}
   FakeFogColor: {r: 0.17428303, g: 0.075509764, b: 0.33996776, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

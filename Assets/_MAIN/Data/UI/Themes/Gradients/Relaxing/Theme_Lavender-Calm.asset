@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Lavender-Calm
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: eee9dab7-81b2-42ba-8f11-ff0c14f1d1e9
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.9490196, g: 0.9254902, b: 1, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 2.9333334, g: 2.619608, b: 3.8431373, a: 4}
   SkyTopColor: {r: 1.4158823, g: 1.3770587, b: 1.5, a: 1.5}
   SkyBottomColor: {r: 1.0910738, g: 0.99107385, b: 1.3810738, a: 1.5}
+  StarsColor: {r: 0.1727, g: 0.20788705, b: 0.30898353, a: 1.6500001}
   FakeFogColor: {r: 1.0404727, g: 0.99267906, b: 1.1679224, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

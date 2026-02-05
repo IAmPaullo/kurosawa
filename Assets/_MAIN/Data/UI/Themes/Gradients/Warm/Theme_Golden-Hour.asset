@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Golden-Hour
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 0d6c264a-0d13-4f8f-85c3-2044450ff97e
   MainGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0.9529412, b: 0.8392157, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 4, g: 1.9137255, b: 0, a: 4}
   SkyTopColor: {r: 1.5, g: 1.4223529, b: 1.2347059, a: 1.5}
   SkyBottomColor: {r: 1.3998241, g: 0.7348242, b: 0.124824174, a: 1.5}
+  StarsColor: {r: 0.20790002, g: 0.18459295, b: 0.18216, a: 1.6500001}
   FakeFogColor: {r: 1.1692467, g: 0.9971899, b: 0.7964563, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

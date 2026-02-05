@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Hot-Magenta
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 5946d6c9-60ee-4d41-be8b-a0ed7b8dd446
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.07058824, g: 0, b: 0.10980392, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 4, g: 0.6745098, b: 3.3568628, a: 4}
   SkyTopColor: {r: 0.10588235, g: 0, b: 0.16470589, a: 1.5}
   SkyBottomColor: {r: 1.3636036, g: 0.3036036, b: 1.1586037, a: 1.5}
+  StarsColor: {r: 3.1214426, g: 2.913836, b: 3.0812922, a: 3.1214426}
   FakeFogColor: {r: 0.21673433, g: 0.03193236, b: 0.30913538, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

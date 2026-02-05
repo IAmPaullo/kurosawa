@@ -7,7 +7,7 @@ using UnityEngine;
 public class GradientSOGeneratorWindow : EditorWindow
 {
     string outputFolder = "Assets/UIThemes/Gradients";
-    bool overwriteExisting  = false;
+    bool overwriteExisting = false;
     bool createSubfoldersByCollection = true;
 
     [Header("Derived Colors Tuning")]
@@ -16,14 +16,27 @@ public class GradientSOGeneratorWindow : EditorWindow
     float fogIntensity = 1.25f;
 
     float skySaturationBoost = 1.1f;
+    float skyBottomDesaturate = 0.15f;
+
     float fogDesaturate = 0.35f;
 
-    [MenuItem("Tools/UI/Generate GradientSO Themes")]
-    static void Open() => GetWindow<GradientSOGeneratorWindow>("GradientSO Generator");
+    [Header("Theme Preview Thresholds")]
+    float topColorThreshold = 0f;
+    float bottomColorThreshold = 1f;
+
+    [Header("Text Decision")]
+    float darkTextLuminanceThreshold = 0.62f;
+
+    [Header("Stars Decision")]
+    float brightSkyLuminanceThreshold = 0.62f;
+    float starsContrastMin = 0.55f;
+
+    [MenuItem("Tools/UI/Generate ThemeSO Themes")]
+    static void Open() => GetWindow<GradientSOGeneratorWindow>("ThemeSO Generator");
 
     void OnGUI()
     {
-        GUILayout.Label("Generate GradientSO Themes (by Collection)", EditorStyles.boldLabel);
+        GUILayout.Label("Generate ThemeSO Themes (by Collection)", EditorStyles.boldLabel);
 
         outputFolder = EditorGUILayout.TextField("Root Folder", outputFolder);
         createSubfoldersByCollection = EditorGUILayout.Toggle("Subfolders by Collection", createSubfoldersByCollection);
@@ -37,7 +50,19 @@ public class GradientSOGeneratorWindow : EditorWindow
         fogIntensity = EditorGUILayout.Slider("Fog Intensity (HDR)", fogIntensity, 0f, 6f);
 
         skySaturationBoost = EditorGUILayout.Slider("Sky Saturation Boost", skySaturationBoost, 0.5f, 2.0f);
+        skyBottomDesaturate = EditorGUILayout.Slider("Sky Bottom Desaturate", skyBottomDesaturate, 0f, 1f);
         fogDesaturate = EditorGUILayout.Slider("Fog Desaturate", fogDesaturate, 0f, 1f);
+
+        EditorGUILayout.Space(8);
+        GUILayout.Label("Theme Preview Thresholds", EditorStyles.boldLabel);
+        topColorThreshold = EditorGUILayout.Slider("Top Threshold", topColorThreshold, 0f, 1f);
+        bottomColorThreshold = EditorGUILayout.Slider("Bottom Threshold", bottomColorThreshold, 0f, 1f);
+
+        EditorGUILayout.Space(8);
+        GUILayout.Label("Heuristics", EditorStyles.boldLabel);
+        darkTextLuminanceThreshold = EditorGUILayout.Slider("Dark Text Luma Threshold", darkTextLuminanceThreshold, 0.35f, 0.85f);
+        brightSkyLuminanceThreshold = EditorGUILayout.Slider("Bright Sky Luma Threshold", brightSkyLuminanceThreshold, 0.35f, 0.85f);
+        starsContrastMin = EditorGUILayout.Slider("Min Stars Contrast", starsContrastMin, 0.2f, 0.9f);
 
         EditorGUILayout.Space(10);
 
@@ -88,30 +113,42 @@ public class GradientSOGeneratorWindow : EditorWindow
             var gradient = CreateGradient(def.hexStops);
             asset.MainGradient = gradient;
 
-            bool darkText = ShouldUseDarkText(def.hexStops);
-            asset.UseDarkText = darkText;
-            asset.TextColor = darkText ? new Color(0.08f, 0.10f, 0.14f, 1f) : Color.white;
-            asset.ButtonColor = PickButtonColor(def.hexStops, darkText);
-
             Color top = gradient.Evaluate(0f);
             Color mid = gradient.Evaluate(0.5f);
             Color bottom = gradient.Evaluate(1f);
 
             Color accent = ParseHex(def.hexStops[def.hexStops.Length - 1]);
 
-            // Glow (HDR): acento mais forte
+            // Text logic
+            bool useDarkText = ShouldUseDarkText(mid, darkTextLuminanceThreshold);
+            asset.UseDarkText = useDarkText;
+
+            // Slightly off-black looks better than pure black on mobile
+            Color darkTextColor = new Color(0.08f, 0.10f, 0.14f, 1f);
+            asset.TextColor = useDarkText ? darkTextColor : Color.white;
+
+            // Button logic
+            asset.ButtonColor = PickButtonColor(def.hexStops, useDarkText);
+
+            // Glow (HDR)
             asset.GlowColor = ToHdr(accent, glowIntensity);
 
-            // Sky (HDR): top mais vibrante, bottom mais suave/escuro
+            // Sky (HDR)
             Color skyTop = BoostSaturation(top, skySaturationBoost);
-            Color skyBottom = Desaturate(bottom, 0.15f);
+            Color skyBottom = Desaturate(bottom, skyBottomDesaturate);
 
             asset.SkyTopColor = ToHdr(skyTop, skyIntensity);
             asset.SkyBottomColor = ToHdr(skyBottom, skyIntensity);
 
-            // Fog (HDR): baseado no mid, desaturado pra parecer neblina
+            // Stars maximize contrast with sky
+            asset.StarsColor = PickStarsColor(asset.SkyTopColor, asset.SkyBottomColor, accent);
+
+            // Fog (HDR)
             Color fog = Desaturate(mid, fogDesaturate);
             asset.FakeFogColor = ToHdr(fog, fogIntensity);
+
+
+            ApplyPreviewThresholds(asset, topColorThreshold, bottomColorThreshold);
 
             EditorUtility.SetDirty(asset);
         }
@@ -119,7 +156,20 @@ public class GradientSOGeneratorWindow : EditorWindow
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        Debug.Log($"GradientSO Themes done. Created: {created}, Updated: {updated}, Skipped: {skipped}. Root: {outputFolder}");
+        Debug.Log($"ThemeSO Themes done. Created: {created}, Updated: {updated}, Skipped: {skipped}. Root: {outputFolder}");
+    }
+
+    static void ApplyPreviewThresholds(ThemeSO asset, float top, float bottom)
+    {
+        var so = new SerializedObject(asset);
+
+        var topProp = so.FindProperty("topColorThreshold");
+        if (topProp != null) topProp.floatValue = Mathf.Clamp01(top);
+
+        var bottomProp = so.FindProperty("bottomColorThreshold");
+        if (bottomProp != null) bottomProp.floatValue = Mathf.Clamp01(bottom);
+
+        so.ApplyModifiedPropertiesWithoutUndo();
     }
 
     static Gradient CreateGradient(string[] hexStops)
@@ -152,18 +202,23 @@ public class GradientSOGeneratorWindow : EditorWindow
         return c;
     }
 
-    static bool ShouldUseDarkText(string[] hexStops)
+    static bool ShouldUseDarkText(Color mid, float threshold)
     {
-        var mid = ParseHex(hexStops[hexStops.Length / 2]);
-        float lum = 0.2126f * mid.r + 0.7152f * mid.g + 0.0722f * mid.b;
-        return lum > 0.62f;
+        float lum = Luminance(mid);
+        return lum > threshold;
     }
 
-    static Color PickButtonColor(string[] hexStops, bool darkText)
+    static float Luminance(Color c)
+    {
+        // sRGB-ish luma weights (good enough for heuristics)
+        return 0.2126f * c.r + 0.7152f * c.g + 0.0722f * c.b;
+    }
+
+    static Color PickButtonColor(string[] hexStops, bool useDarkText)
     {
         var accent = ParseHex(hexStops[hexStops.Length - 1]);
 
-        if (darkText)
+        if (useDarkText)
         {
             Color.RGBToHSV(accent, out float h, out float s, out float v);
             s = Mathf.Clamp01(s * 0.75f);
@@ -172,6 +227,53 @@ public class GradientSOGeneratorWindow : EditorWindow
         }
 
         return accent;
+    }
+
+    Color PickStarsColor(Color skyTopHdr, Color skyBottomHdr, Color accent)
+    {
+        // Work with non-HDR perceived brightness by clamping
+        Color skyTop = Clamp01Rgb(skyTopHdr);
+        Color skyBottom = Clamp01Rgb(skyBottomHdr);
+
+        float skyLum = (Luminance(skyTop) + Luminance(skyBottom)) * 0.5f;
+
+        // If sky is bright -> dark stars; if sky is dark -> bright stars
+        Color starsBase;
+        float starsIntensity;
+
+        if (skyLum > brightSkyLuminanceThreshold)
+        {
+            // Dark stars that still read on bright gradients (think "ink specks" / stylized)
+            starsBase = new Color(0.05f, 0.08f, 0.12f, 1f);
+            starsIntensity = Mathf.Max(1f, skyIntensity * 1.1f);
+        }
+        else
+        {
+            // Bright stars with HDR 
+            starsBase = Color.white;
+
+            // If the sky is very dark = push more intensity
+            float extra = Mathf.Lerp(2.6f, 1.4f, Mathf.InverseLerp(0.0f, brightSkyLuminanceThreshold, skyLum));
+            starsIntensity = Mathf.Max(1f, skyIntensity * extra);
+        }
+
+        // Optional tint: tiny hint of accent but keep contrast
+        Color tinted = Color.Lerp(starsBase, Clamp01Rgb(accent), 0.08f);
+
+        // ensure minimum contrast against average sky (just a lil tweak)
+        float contrast = Mathf.Abs(Luminance(Clamp01Rgb(tinted)) - skyLum);
+        if (contrast < starsContrastMin)
+        {
+            // force to either near white or near black depending on sky
+            tinted = skyLum > 0.5f ? new Color(0.03f, 0.04f, 0.06f, 1f) : Color.white;
+        }
+
+        return ToHdr(tinted, starsIntensity);
+    }
+
+    static Color Clamp01Rgb(Color c)
+    {
+        return new Color(Mathf.Clamp01(c.r), Mathf.Clamp01(c.g), Mathf.Clamp01(c.b), Mathf.Clamp01(c.a));
     }
 
     static Color ToHdr(Color c, float intensity)
@@ -255,7 +357,7 @@ public class GradientSOGeneratorWindow : EditorWindow
         list.Add(new Def("Synthwave", "Miami Sunset", "#0B1026", "#7B1FA2", "#FF4D6D"));
         list.Add(new Def("Synthwave", "Neon Grid", "#060A14", "#0F2A33", "#B7FF00"));
 
-        // New Collections (exemplos)
+        // Extra examples
         list.Add(new Def("Horror", "Cold Basement", "#05060A", "#10131C", "#2A2F3A"));
         list.Add(new Def("Horror", "Blood Lamp", "#08060A", "#2A0B12", "#FF003D"));
         list.Add(new Def("Warm", "Golden Hour", "#FFF3D6", "#FFC98A", "#FF7A00"));

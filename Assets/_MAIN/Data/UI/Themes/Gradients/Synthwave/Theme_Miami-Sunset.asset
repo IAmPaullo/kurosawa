@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Miami-Sunset
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: bb38a451-c705-4b72-8c65-2ab66d232810
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.043137256, g: 0.0627451, b: 0.14901961, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 4, g: 1.2078432, b: 1.7098039, a: 4}
   SkyTopColor: {r: 0.048823513, g: 0.081176504, b: 0.22352943, a: 1.5}
   SkyBottomColor: {r: 1.3783705, g: 0.48837048, b: 0.6483705, a: 1.5}
+  StarsColor: {r: 2.8936388, g: 2.732049, b: 2.7610989, a: 2.8936388}
   FakeFogColor: {r: 0.4948762, g: 0.20174368, b: 0.6191404, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

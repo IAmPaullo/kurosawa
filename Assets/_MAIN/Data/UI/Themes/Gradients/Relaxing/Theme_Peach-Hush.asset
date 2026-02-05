@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Peach-Hush
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 589e1fc0-83bc-4cd1-842a-6121b08cf956
   MainGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0.94509804, b: 0.92156863, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 3.8745098, g: 2.8705883, b: 2.4156864, a: 4}
   SkyTopColor: {r: 1.5, g: 1.4094118, b: 1.3705883, a: 1.5}
   SkyBottomColor: {r: 1.4066287, g: 1.0866288, b: 0.9416288, a: 1.5}
+  StarsColor: {r: 0.20375884, g: 0.21616943, b: 0.26187766, a: 1.6500001}
   FakeFogColor: {r: 1.193362, g: 1.0659122, b: 0.99900126, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1

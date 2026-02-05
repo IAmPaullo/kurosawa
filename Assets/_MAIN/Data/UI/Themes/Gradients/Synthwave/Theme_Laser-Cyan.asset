@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf025e85f3a2104a843dff3e6c9a226, type: 3}
   m_Name: Theme_Laser-Cyan
   m_EditorClassIdentifier: Main::GradientSO
+  uniqueID: 0ca87e44-3e1d-4c11-9ce3-22432923abcf
   MainGradient:
     serializedVersion: 2
     key0: {r: 0.019607844, g: 0.03137255, b: 0.08627451, a: 1}
@@ -47,6 +48,7 @@ MonoBehaviour:
   GlowColor: {r: 0, g: 3.592157, b: 4, a: 4}
   SkyTopColor: {r: 0.019411754, g: 0.038823538, b: 0.12941177, a: 1.5}
   SkyBottomColor: {r: 0.16075748, g: 1.3057575, b: 1.4357574, a: 1.5}
+  StarsColor: {r: 2.4357257, g: 2.6259325, b: 2.647528, a: 2.647528}
   FakeFogColor: {r: 0.10419931, g: 0.20934491, b: 0.355912, a: 1.25}
   topColorThreshold: 0
   bottomColorThreshold: 1
