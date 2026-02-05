@@ -1,5 +1,6 @@
 using Gameplay.Boot.Events;
 using Gameplay.Core.Events;
+using Gameplay.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -75,6 +76,9 @@ public class ThemeController : MonoBehaviour
     private void OnRequestTheme(RequestThemeEvent _)
     {
         if (runtimeTheme == null) return;
+
+
+        AnalyticsManager.LogThemeChange(runtimeTheme.CurrentTheme.name);
 
         EventBus<ThemeUpdateEvent>.Raise(new() { Theme = runtimeTheme.CurrentTheme });
     }

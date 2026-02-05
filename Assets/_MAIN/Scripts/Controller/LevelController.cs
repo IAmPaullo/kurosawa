@@ -3,8 +3,10 @@ using DG.Tweening;
 using Gameplay.Core;
 using Gameplay.Core.Data;
 using Gameplay.Core.Events;
+using Gameplay.Managers;
 using Gameplay.Views;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -139,12 +141,12 @@ namespace Gameplay.Core.Controllers
             }
         }
 
-        private void OnMatchStart(MatchStartEvent evt)
+        private void OnMatchStart(MatchStartEvent _)
         {
             RevealLevelRoutine(revealCts.Token).Forget();
         }
 
-        private void OnMatchEnd(MatchEndEvent evt)
+        private void OnMatchEnd(MatchEndEvent _)
         {
             IsInputActive = false;
         }

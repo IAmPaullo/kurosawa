@@ -33,16 +33,32 @@ namespace Gameplay.Managers
         /// <param name="levelIndex">The index of the completed level.</param>
         /// <param name="secondsTaken">Time in seconds from start to finish.</param>
         /// <param name="totalMoves">Total number of interactions/rotations used.</param>
-        public static void LogLevelComplete(int levelIndex, float secondsTaken, int totalMoves)
+        public static void LogLevelComplete(int levelIndex, float secondsTaken)
         {
             var props = new Dictionary<string, object>
             {
                 { "level_index", levelIndex },
-                { "time_elapsed", System.Math.Round(secondsTaken, 2) }, // Round to 2 decimals for cleaner data
-                { "moves_count", totalMoves }
+                { "time_elapsed", System.Math.Round(secondsTaken, 2) }, // Round to 2 decimals for prettier data
+                //{ "moves_count", totalMoves } TODO: implement move count
             };
 
             LogEvent(EventLevelComplete, props);
+        }
+
+        /// <summary>
+        /// Logs when the player changes the visual theme of the game.
+        /// Useful to track user preferences and potential accessibility choices (e.g. High Contrast, White Text
+        /// </summary>
+        /// <param name="themeName">The ID or Name of the selected theme (e.g., "Dark", "Neon", "Minimal").</param>
+        public static void LogThemeChange(string themeName)
+        {
+            var props = new Dictionary<string, object>
+            {
+                { "selected_theme", themeName },
+                { "timestamp", System.DateTime.UtcNow.ToString("O") } // might help sort if player change multiple times quickly
+            };
+
+            LogEvent("theme_changed", props);
         }
 
         /// <summary>
@@ -60,7 +76,7 @@ namespace Gameplay.Managers
         }
 
         /// <summary>
-        /// Internal wrapper to safely call Amplitude instance.
+        /// wrapper to safely call Amplitude instance.
         /// </summary>
         private static void LogEvent(string eventName, Dictionary<string, object> properties = null)
         {

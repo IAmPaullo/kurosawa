@@ -155,6 +155,7 @@ namespace Gameplay.Managers
             levelStartTime = Time.time;
             Debug.Log("MatchStartEvent raised. starting...");
             EventBus<MatchStartEvent>.Raise(new MatchStartEvent());
+            AnalyticsManager.LogLevelStart(currentSessionLevelIndex);
         }
         private void OnRequestMatchStart(RequestMatchStartEvent _)
         {
@@ -199,6 +200,7 @@ namespace Gameplay.Managers
             SaveManager.RegisterLevelCompletion(currentSessionLevelIndex);
             SaveManager.RegisterLevelGrade(currentSessionLevelIndex, grade);
             EventBus<MatchEndEvent>.Raise(new MatchEndEvent());
+            AnalyticsManager.LogLevelComplete(currentSessionLevelIndex, finalElapsedTime);
         }
         private string CalculatePlayerGrade()
         {
