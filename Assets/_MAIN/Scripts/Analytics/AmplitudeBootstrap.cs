@@ -50,3 +50,5 @@ public class AmplitudeBootstrap : MonoBehaviour
     }
 
 }
+
+
