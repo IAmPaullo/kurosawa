@@ -5,7 +5,7 @@ Kurosawa Project
 Why Kurosawa? I've been binge watching all of Akira Kurosawa filmography and Rashomon was fresh on my mind when I got this as an technical assignment. Great movie.
 
 I'll be honest it was really fun and I'll port this to WebGL and keep developing it for a while. First-ish game of 2026! I will also keep this repository public as I believe it represents the general quality of my code when in a rush or a short deadline.
-
+![rashomon](https://github.com/user-attachments/assets/352be15b-3a02-4f71-8b9d-3f47a114e9f5)
 </details>
 
 ## Short Intro
@@ -15,6 +15,7 @@ This project aims to follow a loose (given the time constraints) MVP architectur
 The original game is a relaxing 2D puzzle and while that was the assignment, I could not hold myself and give it a change of theme. I tried to keep it somewhat relaxing, at least not stress inducing, while converting it into 3D.
 
 I've been getting more into Technical Art in these last months so I also took this as an opportunity to train my creative muscle and took the personal challenge to create at least a couple shaders and model the 3D assets.
+
 
 # Author's Opinion and Future Improvements
 
@@ -35,6 +36,8 @@ I started this project by playing the OG game and planning my week accordingly. 
 I could have gone a little more wild with the shaders but I planned for an infinite startfield along a water surface (like Starry Nights from Van Gogh but with way more stars) with an orthographic 2.5D view.
 
 Did I manage to achieve what I was planning? Kind of. In the end it looked more like Interstellar.
+<img width="256" height="256" alt="image" src="https://github.com/user-attachments/assets/0a5012ca-f8f3-4110-9e49-29ee896c9fdf" />
+
 
 </details>
 
