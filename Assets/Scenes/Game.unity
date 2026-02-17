@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: b126d567d248abb4a8c756824a8ffc20, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 69dcbaf476194e649ba73355957ab9b6, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -2537,6 +2537,7 @@ Transform:
   - {fileID: 680065389}
   - {fileID: 1835740241}
   - {fileID: 1229634171}
+  - {fileID: 1786224539}
   m_Father: {fileID: 1803751822}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1309801120
@@ -3339,6 +3340,68 @@ MonoBehaviour:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8531724500494475354, guid: b9d294dc398987444b776c7ebe3ab5cc, type: 3}
   m_PrefabInstance: {fileID: 648180178}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1786224538
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1277034920}
+    m_Modifications:
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6492572918074157337, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+      propertyPath: m_Name
+      value: Light Probe Group
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+--- !u!4 &1786224539 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6230119986903126993, guid: ebc74fe82daa2f148871697be12bf66b, type: 3}
+  m_PrefabInstance: {fileID: 1786224538}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1803751821
 GameObject:
