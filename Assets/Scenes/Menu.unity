@@ -2038,7 +2038,6 @@ MonoBehaviour:
     MusicVolumeSlider: {fileID: 1020599651}
     HapticsButton: {fileID: 955931434}
     HapticsLabel: {fileID: 700573493}
-    RestartLevelButton: {fileID: 0}
     BackToMenuButton: {fileID: 0}
   RestartLevelRequested:
     m_PersistentCalls:
@@ -3386,23 +3385,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 801740627900380291, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 801740627900380291, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 801740627900380291, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 1520
       objectReference: {fileID: 0}
     - target: {fileID: 801740627900380291, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 880
       objectReference: {fileID: 0}
     - target: {fileID: 801740627900380291, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -453.96
       objectReference: {fileID: 0}
     - target: {fileID: 1264781252591801979, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3443,6 +3442,14 @@ PrefabInstance:
     - target: {fileID: 2712920635689287634, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297232176931354251, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4297232176931354251, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4972737704024547672, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3564,9 +3571,37 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6952256882396166158, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6952256882396166158, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 6952256882396166158, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 7400682302349341260, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7904990421601613992, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -900
+      objectReference: {fileID: 0}
     - target: {fileID: 7904990421601613992, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7904990421601613992, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7904990421601613992, guid: 019934ac20ba8644996194ed430c7eb7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 43
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
